@@ -16,7 +16,10 @@ public abstract class BaseGame extends Game {
     public static BaseGame game;
     public static TextButton.TextButtonStyle textButtonStyle;
     public static BitmapFont customFont;
+    public static BitmapFont largeCustomFont;
+
     public static Label.LabelStyle labelStyle;
+    public static Label.LabelStyle largeLabelStyle;
 
     public BaseGame() {
         game = this;
@@ -25,9 +28,13 @@ public abstract class BaseGame extends Game {
     @Override
     public void create() {
         customFont = new BitmapFont(Gdx.files.internal("kristen.fnt"));
+        largeCustomFont = new BitmapFont(Gdx.files.internal("kristen_large.fnt"));
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = BaseGame.customFont;
+
+        largeLabelStyle = new Label.LabelStyle();
+        largeLabelStyle.font = BaseGame.largeCustomFont;
 
         textButtonStyle = new TextButton.TextButtonStyle();
         Texture buttonTex = new Texture(Gdx.files.internal("button.png"));
