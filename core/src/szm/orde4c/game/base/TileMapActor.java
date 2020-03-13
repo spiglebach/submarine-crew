@@ -37,22 +37,26 @@ public class TileMapActor extends Actor {
     public TileMapActor(String filename, Stage stage) {
         tiledMap = new TmxMapLoader().load(filename);
 
-        tileWidth = (int)tiledMap.getProperties().get("tilewidth");
-        tileHeight = (int)tiledMap.getProperties().get("tileheight");
-        numTilesHorizontal = (int)tiledMap.getProperties().get("width");
-        numTilesVertical = (int)tiledMap.getProperties().get("height");
+        tileWidth = (int) tiledMap.getProperties().get("tilewidth");
+        tileHeight = (int) tiledMap.getProperties().get("tileheight");
+        numTilesHorizontal = (int) tiledMap.getProperties().get("width");
+        numTilesVertical = (int) tiledMap.getProperties().get("height");
         mapWidth = tileWidth * numTilesHorizontal;
         mapHeight = tileHeight * numTilesVertical;
-//
-//        BaseActor.setWorldBounds(mapWidth, mapHeight);
-//
-//        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap);
-//        tiledMapRenderer.setBlending(true);
-//        tiledCamera = new OrthographicCamera();
-//        tiledCamera.setToOrtho(false, windowWidth, windowHeight);
-//        tiledCamera.update();
-//
-//        stage.addActor(this);
+    }
+
+    public TileMapActor(String filename, Stage stage, boolean setCamera) {
+        this(filename, stage);
+
+        BaseActor.setWorldBounds(mapWidth, mapHeight);
+
+        tiledMapRenderer = new OrthoCachedTiledMapRenderer(tiledMap);
+        tiledMapRenderer.setBlending(true);
+        tiledCamera = new OrthographicCamera();
+        tiledCamera.setToOrtho(false, windowWidth, windowHeight);
+        tiledCamera.update();
+
+        stage.addActor(this);
     }
 
     @Override
@@ -122,7 +126,7 @@ public class TileMapActor extends Actor {
                 }
                 MapProperties props = obj.getProperties();
 
-                TiledMapTileMapObject tmtmo = (TiledMapTileMapObject)obj;
+                TiledMapTileMapObject tmtmo = (TiledMapTileMapObject) obj;
                 TiledMapTile tile = tmtmo.getTile();
                 MapProperties defaultProperties = tile.getProperties();
 

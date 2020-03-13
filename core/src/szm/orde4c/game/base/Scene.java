@@ -38,11 +38,11 @@ public class Scene extends Actor {
     }
 
     public boolean isLastSegment() {
-        return index >= segmentList.size()-1;
+        return index >= segmentList.size() - 1;
     }
 
     public void loadNextSegment() {
-        if(isLastSegment()) {
+        if (isLastSegment()) {
             return;
         }
         segmentList.get(index).finish();

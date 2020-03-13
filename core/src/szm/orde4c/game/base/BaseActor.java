@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.compression.lzma.Base;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -28,6 +27,11 @@ public class BaseActor extends Group {
 
     protected float maxSpeed;
     protected float deceleration;
+
+    float rotationSpeed;
+    float rotationLimit;
+    float initialRotation;
+    int rotationDirection;
 
     private Polygon boundaryPolygon;
 
@@ -48,6 +52,11 @@ public class BaseActor extends Group {
 
         maxSpeed = 1000;
         deceleration = 0;
+
+        rotationSpeed = 0;
+        rotationLimit = 0;
+        initialRotation = 0;
+        rotationDirection = 0;
     }
 
     public void setAnimation(Animation<TextureRegion> animation) {
@@ -86,15 +95,6 @@ public class BaseActor extends Group {
         if (animation != null && isVisible()) {
             batch.draw(animation.getKeyFrame(elapsedTime), getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
         }
-        /*
-//        poligonok kirajzolása
-        ShapeRenderer sr = new ShapeRenderer();
-        sr.setAutoShapeType(true);
-        sr.begin();
-        sr.setColor(1,0,0,1);
-        sr.polygon(boundaryPolygon.getTransformedVertices());
-        sr.end();
-        sr.dispose();*/
 
         super.draw(batch, parentAlpha);
     }
@@ -114,8 +114,20 @@ public class BaseActor extends Group {
         moveBy(velocityVector.x * dt, velocityVector.y * dt);
 
         accelerationVector.set(0, 0);
+    }
 
+    public void applyRotation(float dt) {
+        float rotation = getRotation();
+        rotation += rotationSpeed * dt * rotationDirection;
+        if (rotationLimit != 0) {
+            rotation = MathUtils.clamp(rotation, initialRotation - rotationLimit, initialRotation + rotationLimit);
+        }
+        setRotation(rotation);
+        rotationDirection = 0;
+    }
 
+    public void rotate(int direction) {
+        rotationDirection = direction;
     }
 
     public void moveForward(float distance) {
@@ -281,6 +293,10 @@ public class BaseActor extends Group {
         return loadAnimationFromFiles(fileNames, 1, false);
     }
 
+    public void resetAnimation() {
+        elapsedTime = 0;
+    }
+
     public boolean isAnimationFinished() {
         return animation.isAnimationFinished(elapsedTime);
     }
@@ -362,8 +378,8 @@ public class BaseActor extends Group {
         Viewport viewport = this.getStage().getViewport();
 
         camera.position.set(getX() + getOriginX(), getY() + getOriginY(), 0);
-//        camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2, worldBounds.width - camera.viewportWidth / 2);
-//        camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight / 2, worldBounds.height - camera.viewportHeight / 2);
+        camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2, worldBounds.width - camera.viewportWidth / 2);
+        camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight / 2, worldBounds.height - camera.viewportHeight / 2);
 
         camera.update();
     }
@@ -431,6 +447,7 @@ public class BaseActor extends Group {
     public void setVelocityVector(Vector2 vec) {
         this.velocityVector = vec;
     }
+
     public Vector2 getVelocityVector() {
         return velocityVector;
     }
@@ -443,4 +460,15 @@ public class BaseActor extends Group {
         return new Vector2(getX(), getY());
     }
 
+    public void setRotationSpeed(float rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
+    }
+
+    public void setRotationLimit(float rotationLimit) {
+        this.rotationLimit = rotationLimit;
+    }
+
+    public void setInitialRotation(float initialRotation) {
+        this.initialRotation = initialRotation;
+    }
 }

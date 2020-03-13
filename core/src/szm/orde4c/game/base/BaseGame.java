@@ -24,7 +24,7 @@ public abstract class BaseGame extends Game {
 
     @Override
     public void create() {
-        customFont = new BitmapFont(Gdx.files.internal("cooper.fnt"));
+        customFont = new BitmapFont(Gdx.files.internal("kristen.fnt"));
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = BaseGame.customFont;

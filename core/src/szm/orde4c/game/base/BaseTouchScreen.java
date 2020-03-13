@@ -11,10 +11,6 @@ public abstract class BaseTouchScreen extends BaseScreen {
     protected Stage controlStage;
     protected Table controlTable;
 
-    public BaseTouchScreen() {
-        super();
-    }
-
     public void initializeControlArea() {
         controlStage = new Stage(new FitViewport(800, 800));
         controlTable = new Table();
@@ -37,8 +33,7 @@ public abstract class BaseTouchScreen extends BaseScreen {
     }
 
     @Override
-    public void render(float dt)
-    {
+    public void render(float dt) {
         // act methods
         uiStage.act(dt);
         mainStage.act(dt);
@@ -46,13 +41,13 @@ public abstract class BaseTouchScreen extends BaseScreen {
         // defined by user
         update(dt);
         // clear the screen
-        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // set the drawing regions and draw the graphics
-        Gdx.gl.glViewport(0,200, 800,600);
+        Gdx.gl.glViewport(0, 200, 800, 600);
         mainStage.draw();
         uiStage.draw();
-        Gdx.gl.glViewport(0,0, 800,800);
+        Gdx.gl.glViewport(0, 0, 800, 800);
         controlStage.draw();
     }
 }

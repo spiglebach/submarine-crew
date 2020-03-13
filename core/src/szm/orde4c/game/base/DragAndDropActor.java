@@ -25,7 +25,7 @@ public class DragAndDropActor extends BaseActor {
         startPositionX = x;
         startPositionY = y;
 
-        addListener(new InputListener(){
+        addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!draggable) {
@@ -51,7 +51,7 @@ public class DragAndDropActor extends BaseActor {
                 dropTarget = null;
                 float closestDistance = Float.MAX_VALUE;
 
-                for(BaseActor targetActor : BaseActor.getList(getStage(), "com.mygdx.game.DropTargetActor")) {
+                for (BaseActor targetActor : BaseActor.getList(getStage(), "com.mygdx.game.DropTargetActor")) {
                     DropTargetActor target = (DropTargetActor) targetActor;
                     if (target.isTargetable() && overlaps(target)) {
                         float currentDistance = Vector2.dst(getX(), getY(), target.getX(), target.getY());

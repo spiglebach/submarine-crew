@@ -11,7 +11,7 @@ public class SetTextAction extends Action {
 
     @Override
     public boolean act(float delta) {
-        DialogBox db = (DialogBox)target;
+        DialogBox db = (DialogBox) target;
         db.setText(textToDisplay);
         return true;
     }

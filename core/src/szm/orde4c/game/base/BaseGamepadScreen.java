@@ -15,12 +15,10 @@ public abstract class BaseGamepadScreen extends BaseScreen implements Controller
 
     @Override
     public void connected(Controller controller) {
-
     }
 
     @Override
     public void disconnected(Controller controller) {
-
     }
 
     @Override

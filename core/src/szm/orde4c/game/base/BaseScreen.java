@@ -17,10 +17,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     protected Table uiTable;
 
     public BaseScreen() {
-//        mainStage = new Stage(new FitViewport(800, 600));
-//        uiStage = new Stage(new FitViewport(800, 600));
-        mainStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-        uiStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+        mainStage = new Stage(new FitViewport(1920, 1080));
+        uiStage = new Stage(new FitViewport(1920, 1080));
 
         uiTable = new Table();
         uiTable.setFillParent(true);
@@ -124,6 +122,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean isTouchdownEvent(Event e) {
-        return (e instanceof InputEvent) && ((InputEvent)e).getType().equals(InputEvent.Type.touchDown);
+        return (e instanceof InputEvent) && ((InputEvent) e).getType().equals(InputEvent.Type.touchDown);
     }
 }
