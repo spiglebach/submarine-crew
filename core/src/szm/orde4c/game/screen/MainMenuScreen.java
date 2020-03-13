@@ -27,7 +27,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
         MenuLabel newGame = new MenuLabel("New Game", BaseGame.largeLabelStyle) {
             @Override
             public void execute() {
-//                BaseGame.setActiveScreen(new PlayerSelectionScreen());
+                BaseGame.setActiveScreen(new PlayerSelectionScreen());
             }
         };
         newGame.setFontScale(0.5f);
@@ -73,8 +73,6 @@ public class MainMenuScreen extends BaseGamepadScreen {
                 // No controller attached!
             }
         }
-
-
     }
 
     private void switchOption(float amount) {
