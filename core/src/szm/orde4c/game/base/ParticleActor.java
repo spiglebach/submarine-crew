@@ -34,6 +34,10 @@ public class ParticleActor extends Group {
         setPosition(other.getX() + other.getWidth() / 2, other.getY() + other.getHeight() / 2);
     }
 
+    public void centerAtPosition(float x, float y) {
+        setPosition(x - getWidth() / 2, y - getHeight() / 2);
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);

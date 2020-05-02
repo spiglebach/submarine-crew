@@ -40,7 +40,9 @@ public class BaseActor extends Group {
     public BaseActor(float x, float y, Stage s) {
         super();
         setPosition(x, y);
-        s.addActor(this);
+        if (s != null ) {
+            s.addActor(this);
+        }
 
         animation = null;
         elapsedTime = 0;
@@ -188,10 +190,6 @@ public class BaseActor extends Group {
     }
 
     public Vector2 preventOverlap(BaseActor other) {
-        return preventOverlapWithScale(other, 1.0f);
-    }
-
-    public Vector2 preventOverlapWithScale(BaseActor other, float scale) {
         Polygon poly1 = this.getBoundaryPolygon();
         Polygon poly2 = other.getBoundaryPolygon();
 
@@ -206,7 +204,7 @@ public class BaseActor extends Group {
             return null;
         }
 
-        this.moveBy(mtv.normal.x * mtv.depth * scale, mtv.normal.y * mtv.depth * scale);
+        this.moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
         return mtv.normal;
     }
 
@@ -223,7 +221,7 @@ public class BaseActor extends Group {
         Polygon poly1 = this.getBoundaryPolygon();
         float scaleX = (this.getWidth() + 2 * distance) / this.getWidth();
         float scaleY = (this.getHeight() + 2 * distance) / this.getHeight();
-        poly1.setScale(scaleX, scaleY);
+        poly1.setScale(1.5f, 1.5f);
 
         Polygon poly2 = other.getBoundaryPolygon();
 
@@ -471,4 +469,9 @@ public class BaseActor extends Group {
     public void setInitialRotation(float initialRotation) {
         this.initialRotation = initialRotation;
     }
+
+    public float getInitialRotation() {
+        return initialRotation;
+    }
+
 }
