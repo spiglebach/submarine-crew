@@ -21,7 +21,6 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
     private final float OPTION_SWITCH_TIME_LIMIT = 0.5f;
     private float lastOptionSwitch = OPTION_SWITCH_TIME_LIMIT;
     private final float CONTROLLER_DEADZONE = 0.2f;
-    private Table table;
 
     public PauseMenu(List<MenuLabel> menuOptions, float opacity, Stage s) {
         super(0, 0, s);
@@ -32,10 +31,9 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
         setOpacity(opacity);
         setSize(s.getWidth(), s.getHeight());
 
-        table = new Table();
+        Table table = new Table();
         table.setFillParent(true);
         addActor(table);
-
         table.pad(30);
 
         for (MenuLabel option : menuOptions) {
@@ -44,9 +42,7 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
             table.add().expandX();
             table.row();
         }
-
         highlight();
-
     }
 
     @Override
@@ -106,14 +102,17 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.E || keycode == Input.Keys.ENTER) {
             executeSelectedMenuOption();
+            return true;
         }
         if (keycode == Input.Keys.W) {
             switchOptionUp();
+            return true;
         }
         if (keycode == Input.Keys.S) {
             switchOptionDown();
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
