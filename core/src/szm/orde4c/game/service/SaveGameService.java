@@ -17,7 +17,7 @@ public class SaveGameService {
         Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
         ArrayList<Save> saves = new ArrayList<>();
 
-        for (int i = 1; i <= SAVE_SLOT_COUNT; i++) {
+        for (int i = 0; i < SAVE_SLOT_COUNT; i++) {
             String saveKey = SAVE_PREFIX + i;
             int completedLevels = savePreferences.getInteger(saveKey);
             if (savePreferences.contains(saveKey)) {
@@ -40,19 +40,14 @@ public class SaveGameService {
         save(save.getId(), save.getCompletedLevels());
     }
 
+    public static void deleteSave(Save save) {
+        deleteSave(save.getId());
+    }
+
     public static void deleteSave(int saveId) {
         Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
         savePreferences.remove(SAVE_PREFIX + saveId);
-        if (savePreferences.getInteger(LAST_SAVE_INDEX_KEY, -1) == saveId) {
-            savePreferences.remove(LAST_SAVE_INDEX_KEY);
-        }
         savePreferences.flush();
-    }
-
-    public static Save getLastSave() {
-        Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
-        int levelIndex = savePreferences.getInteger(LAST_SAVE_INDEX_KEY, -1);
-        return getSaveById(levelIndex);
     }
 
     public static Save getSaveById(int saveId) {
@@ -83,11 +78,17 @@ public class SaveGameService {
     }
 
     public static int getFirstUnoccupiedSaveId() {
-        for (int i = 1; i <= SAVE_SLOT_COUNT; i++) {
+        for (int i = 0; i < SAVE_SLOT_COUNT; i++) {
             if (getSaveById(i) == null) {
                 return i;
             }
         }
         return -1;
+    }
+
+    public static void pruneSaves() {
+        for (int i = 0; i <= SAVE_SLOT_COUNT; i++) {
+            deleteSave(i);
+        }
     }
 }
