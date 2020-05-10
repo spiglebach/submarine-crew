@@ -29,7 +29,7 @@ public class SaveGameService {
         return saves;
     }
 
-    public static void save(int saveId, int completedLevels) {
+    private static void save(int saveId, int completedLevels) {
         Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
         savePreferences.putInteger(SAVE_PREFIX + saveId, completedLevels);
         savePreferences.putInteger(LAST_SAVE_INDEX_KEY, saveId);
@@ -44,13 +44,13 @@ public class SaveGameService {
         deleteSave(save.getId());
     }
 
-    public static void deleteSave(int saveId) {
+    private static void deleteSave(int saveId) {
         Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
         savePreferences.remove(SAVE_PREFIX + saveId);
         savePreferences.flush();
     }
 
-    public static Save getSaveById(int saveId) {
+    private static Save getSaveById(int saveId) {
         for (Save save : getSaves()) {
             if (save != null && save.getId() == saveId) {
                 return save;
