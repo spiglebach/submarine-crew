@@ -2,6 +2,7 @@ package szm.orde4c.game.entity.submarine;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import szm.orde4c.game.base.XBoxGamepad;
 
 public class ShieldStation extends Station {
     public ShieldStation(float x, float y, float width, float height, Submarine submarine, Stage s) {
@@ -24,13 +25,25 @@ public class ShieldStation extends Station {
 
     @Override
     public void buttonPressed(int buttonCode) {
-        super.buttonPressed(buttonCode);
+        if (buttonCode == XBoxGamepad.BUTTON_X) {
+            chargeSubmarineShields();
+        }
     }
 
     @Override
     public void keyDown(int keyCode) {
         if (keyCode == Input.Keys.E) {
-            submarine.increaseShield(5);
+            chargeSubmarineShields();
         }
+    }
+
+    private void chargeSubmarineShields() {
+        oneTimeEnergyConsumption(5);
+        submarine.increaseShield(5);
+    }
+
+    @Override
+    public void continiousEnergyConsumption(float delta) {
+
     }
 }

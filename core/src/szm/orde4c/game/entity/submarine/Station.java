@@ -7,20 +7,15 @@ import szm.orde4c.game.base.XBoxGamepad;
 
 public abstract class Station extends BaseActor {
     protected Submarine submarine;
-
-    protected boolean operated;
-
-    protected boolean activated;
-    protected float energyCostPerMinute;
-
     protected Player operatingPlayer;
+    protected boolean operated;
+    protected boolean activated;
 
     public Station(float x, float y, float width, float height, Submarine submarine, Stage s) {
         super(x, y, s);
         setSize(width, height);
         setBoundaryRectangle();
-        energyCostPerMinute = 0;
-        activated = true;
+        activated = false;
         this.submarine = submarine;
         submarine.addActor(this);
     }
@@ -50,10 +45,6 @@ public abstract class Station extends BaseActor {
         }
     }
 
-    public float getEnergyCostPerMinute() {
-        return energyCostPerMinute;
-    }
-
     public boolean isActivated() {
         return activated;
     }
@@ -61,20 +52,22 @@ public abstract class Station extends BaseActor {
     public void buttonPressed(int buttonCode) {
         if (buttonCode == XBoxGamepad.BUTTON_X) {
             activated = !activated;
-            return;
         }
-
     }
 
     public void keyDown(int keyCode) {
         if (keyCode == Input.Keys.E) {
             activated = !activated;
-            return;
         }
     }
 
-    public boolean axisMoved(int axisCode, float value) {
-        return false;
+    public void axisMoved(int axisCode, float value) {
     }
+
+    public void oneTimeEnergyConsumption(float amount) {
+        submarine.decreaseEnergy(amount);
+    }
+
+    public abstract void continiousEnergyConsumption(float delta);
 
 }
