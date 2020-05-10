@@ -20,7 +20,7 @@ public class LevelSelectorCursor extends BaseActor {
         setPosition(nextLevel.getX(), nextLevel.getY());
         transitionStartingPosition = new Vector2(nextLevel.getX(), nextLevel.getY());
         transitionTimeLeft = 0;
-        alignCamera();
+//        alignCamera();
     }
 
     public void nextLevel(LevelStamp nextLevel) {
@@ -48,7 +48,6 @@ public class LevelSelectorCursor extends BaseActor {
             transitionTimeLeft = 0;
             setPosition(nextLevel.getX(), nextLevel.getY());
         }
-
-        alignCamera();
+//        alignCamera();
     }
 }

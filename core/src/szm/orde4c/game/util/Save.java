@@ -24,9 +24,4 @@ public class Save {
     public void setCompletedLevels(int completedLevels) {
         this.completedLevels = completedLevels;
     }
-
-    @Override
-    public String toString() {
-        return "saveId: " + id + "  |  completedLevels: " + completedLevels;
-    }
 }
