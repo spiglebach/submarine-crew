@@ -59,7 +59,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-
+        mainStage.getViewport().update(width, height);
+        mainStage.getCamera().update();
     }
 
     @Override

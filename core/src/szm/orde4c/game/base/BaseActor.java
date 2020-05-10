@@ -28,10 +28,10 @@ public class BaseActor extends Group {
     protected float maxSpeed;
     protected float deceleration;
 
-    float rotationSpeed;
-    float rotationLimit;
-    float initialRotation;
-    int rotationDirection;
+    protected float rotationSpeed;
+    protected float rotationLimit;
+    protected float initialRotation;
+    protected int rotationDirection;
 
     private Polygon boundaryPolygon;
 
