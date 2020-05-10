@@ -9,7 +9,7 @@ import szm.orde4c.game.entity.Damageable;
 
 public abstract class RandomizedAreaObject extends BaseActor implements Damageable {
     protected Area area;
-    protected int health;
+    protected float health;
 
     public RandomizedAreaObject(Area area, float minimumSize, float maximumSize, int minimumHealth, int maximumHealth, Stage s) {
         super(0, 0, s);
@@ -89,7 +89,7 @@ public abstract class RandomizedAreaObject extends BaseActor implements Damageab
     protected abstract void randomizeTexture();
 
     @Override
-    public void damage(int damage) {
+    public void damage(float damage) {
         health -= damage;
     }
 

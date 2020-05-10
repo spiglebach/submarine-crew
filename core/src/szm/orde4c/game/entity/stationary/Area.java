@@ -7,8 +7,6 @@ import szm.orde4c.game.util.AreaObjectType;
 public class Area extends BaseActor {
     public Area(AreaObjectType areaObjectType, float x, float y, float width, float height, float rotation, int objectCount, Stage s) {
         super(x, y, s);
-        loadTexture("platform.png");    //TODO remove
-        setOpacity(0.5f);    //TODO remove
         setSize(width, height);
         setOrigin(0, height);
         setRotation(rotation);
