@@ -19,34 +19,22 @@ public class MainMenuScreen extends BaseGamepadScreen {
     @Override
     public void initialize() {
         ArrayList<MenuLabel> menuOptions = new ArrayList<>();
-
-        if (SaveGameService.getLastSave() != null) {
-            MenuLabel continueOption = new MenuLabel("Continue", BaseGame.largeLabelStyle) {
-                @Override
-                public void execute() {
-                    removeMainControllerListener();
-                    BaseGame.setActiveScreen(new LevelSelectorScreen(SaveGameService.getLastSave()));
-                }
-            };
-            menuOptions.add(continueOption);
-        }
-
         if (!SaveGameService.allSaveSlotsOccupied()) {
-            MenuLabel newGame = new MenuLabel("New Game", BaseGame.largeLabelStyle) {
+            MenuLabel newGame = new MenuLabel("Új játék", BaseGame.largeLabelStyle) {
                 @Override
                 public void execute() {
                     removeMainControllerListener();
                     int firstUnoccupiedSaveId = SaveGameService.getFirstUnoccupiedSaveId();
                     Save newSave = new Save(firstUnoccupiedSaveId, 0);
                     SaveGameService.save(newSave);
-                    BaseGame.setActiveScreen(new LevelSelectorScreen(newSave));
+                    BaseGame.setActiveScreen(new PlayerSelectionScreen(1, newSave));
                 }
             };
             menuOptions.add(newGame);
         }
 
         if (SaveGameService.hasAtLeastOneSave()) {
-            MenuLabel loadGame = new MenuLabel("Load Game", BaseGame.largeLabelStyle) {
+            MenuLabel loadGame = new MenuLabel("Játék betöltése", BaseGame.largeLabelStyle) {
                 @Override
                 public void execute() {
                     removeMainControllerListener();
@@ -56,7 +44,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
             menuOptions.add(loadGame);
         }
 
-        MenuLabel exit = new MenuLabel("Exit", BaseGame.largeLabelStyle) {
+        MenuLabel exit = new MenuLabel("Kilépés", BaseGame.largeLabelStyle) {
             @Override
             public void execute() {
                 Gdx.app.exit();
