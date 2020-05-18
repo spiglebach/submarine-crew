@@ -5,11 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import szm.orde4c.game.base.BaseActor;
+import szm.orde4c.game.util.Assets;
 
 public class ColorSelectorArrow extends BaseActor {
     public ColorSelectorArrow(float x, float y, float width, float height, boolean pointingLeft, Stage s) {
         super(x, y, s);
-        loadTexture("arrow_left.png");
+        loadTexture(Assets.instance.getTexture(Assets.PLAYER_ARROW));
         setSize(width, height);
         setOrigin(Align.center);
         setRotation(pointingLeft ? 0 : 180);
