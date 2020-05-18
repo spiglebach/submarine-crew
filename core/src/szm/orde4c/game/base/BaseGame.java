@@ -26,7 +26,7 @@ public abstract class BaseGame extends Game {
 
     @Override
     public void create() {
-        customFont = Assets.instance.getBitmapFont(Assets.FONT_KRISTEN);
+        customFont = Assets.instance.getBitmapFont(Assets.FONT_GILLSANS);
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = BaseGame.customFont;

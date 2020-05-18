@@ -92,7 +92,8 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
             float x = (float) levelProperties.get("x") * levelSelectorScaleX;
             float y = (float) levelProperties.get("y") * levelSelectorScaleY;
-            LevelStamp levelStamp = new LevelStamp(x, y, uiStage);
+            String title = (String) levelProperties.get("title");
+            LevelStamp levelStamp = new LevelStamp(x, y, title, uiStage);
             levelSelectorSubScreen.addActor(levelStamp);
             levels.put(levelId, levelStamp);
         }
@@ -112,7 +113,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
                 highlightIndex = i;
             }
             saveSlots.add(slot);
-            savesTable.pad(60);
+            savesTable.pad(10);
             savesTable.add(slot).expand().left();
             savesTable.row();
         }
