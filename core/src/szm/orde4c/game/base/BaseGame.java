@@ -10,16 +10,15 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import szm.orde4c.game.util.Assets;
 
 
 public abstract class BaseGame extends Game {
     public static BaseGame game;
     public static TextButton.TextButtonStyle textButtonStyle;
     public static BitmapFont customFont;
-    public static BitmapFont largeCustomFont;
 
     public static Label.LabelStyle labelStyle;
-    public static Label.LabelStyle largeLabelStyle;
 
     public BaseGame() {
         game = this;
@@ -27,17 +26,13 @@ public abstract class BaseGame extends Game {
 
     @Override
     public void create() {
-        customFont = new BitmapFont(Gdx.files.internal("font/kristen.fnt"));
-        largeCustomFont = new BitmapFont(Gdx.files.internal("font/kristen_large.fnt"));
+        customFont = Assets.instance.getBitmapFont(Assets.FONT_KRISTEN);
 
         labelStyle = new Label.LabelStyle();
         labelStyle.font = BaseGame.customFont;
 
-        largeLabelStyle = new Label.LabelStyle();
-        largeLabelStyle.font = BaseGame.largeCustomFont;
-
         textButtonStyle = new TextButton.TextButtonStyle();
-        Texture buttonTex = new Texture(Gdx.files.internal("button.png"));
+        Texture buttonTex = Assets.instance.getTexture(Assets.BUTTON);
         NinePatch buttonPatch = new NinePatch(buttonTex, 24, 24, 24, 24);
         textButtonStyle.up = new NinePatchDrawable(buttonPatch);
         textButtonStyle.font = customFont;
