@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import szm.orde4c.game.base.*;
 import szm.orde4c.game.service.SaveGameService;
 import szm.orde4c.game.ui.*;
+import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.Save;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LoadGameScreen extends BaseGamepadScreen {
+    private final int LEVEL_COUNT = 5;
     private boolean levelSelectionMode;
     private int highlightIndex;
 
@@ -33,7 +35,6 @@ public class LoadGameScreen extends BaseGamepadScreen {
     private LevelSelectorCursor cursor;
     private HashMap<Integer, LevelStamp> levels;
     private final int MINIMUM_LEVEL_INDEX = 1;
-    private int maximumLevelIndex;
     private int currentLevelIndex;
     private int previousLevelIndex;
     private int nextLevelIndex;
@@ -60,32 +61,35 @@ public class LoadGameScreen extends BaseGamepadScreen {
         uiTable.row();
         uiTable.add(new ControlDisplay(new TextButtonIndicatorPair[]{
                 new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_LOAD,
-                        new int[]{ButtonIndicator.CONTROLLER_FACE_BUTTON_WEST, ButtonIndicator.KEYBOARD_BUTTON_E}),
+                        new int[]{ButtonIndicator.CONTROLLER_FACE_WEST, ButtonIndicator.KEYBOARD_E}),
                 new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_DELETE,
-                        new int[]{ButtonIndicator.CONTROLLER_BUTTON_START, ButtonIndicator.KEYBOARD_BUTTON_DELETE})},
-                0.3f, 0.1f, 0.5f, uiStage)).colspan(2).expandX();
+                        new int[]{ButtonIndicator.CONTROLLER_START, ButtonIndicator.KEYBOARD_DELETE})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(2).expandX();
+        uiTable.row();
+        uiTable.add(new ControlDisplay(new TextButtonIndicatorPair[]{
+                new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_SELECT_SAVE,
+                        new int[]{ButtonIndicator.CONTROLLER_JOYSTICK_Y, ButtonIndicator.KEYBOARD_WS}),
+                new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_SELECT_LEVEL,
+                        new int[]{ButtonIndicator.CONTROLLER_JOYSTICK_X, ButtonIndicator.KEYBOARD_AD})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(2).expandX();
     }
 
     private void initializeLevelSelector() {
         Table levelsTable = new Table();
         levels = new HashMap<>();
-        maximumLevelIndex = 1;
         levelSelectorSubScreen = new BaseActor(0, 0, uiStage);
-        levelSelectorSubScreen.loadTexture("level/overview-map.png");
+        levelSelectorSubScreen.loadTexture(Assets.instance.getTexture(Assets.LEVEL_SELECTOR_IMAGE));
         float plannedWidth = uiStage.getWidth() - saveSlotWidth;
         float plannedHeight = uiStage.getHeight() * 0.5f;
         float levelSelectorScaleX = plannedWidth / levelSelectorSubScreen.getWidth();
         float levelSelectorScaleY = plannedHeight / levelSelectorSubScreen.getHeight();
         levelSelectorSubScreen.setSize(plannedWidth, plannedHeight);
 
-        TileMapActor tileMapActor = new TileMapActor("level/map.tmx", uiStage);
+        TileMapActor tileMapActor = new TileMapActor("level/level-selector.tmx", uiStage);
         for (MapObject levelObject : tileMapActor.getRectangleList("Level")) {
             MapProperties levelProperties = levelObject.getProperties();
             int levelId = Integer.parseInt((String) levelProperties.get("id"));
-            if (levelId > maximumLevelIndex) {
-                maximumLevelIndex = levelId;
-            }
-            String title = (String) levelProperties.get("title");
+
             float x = (float) levelProperties.get("x") * levelSelectorScaleX;
             float y = (float) levelProperties.get("y") * levelSelectorScaleY;
             LevelStamp levelStamp = new LevelStamp(x, y, uiStage);
@@ -103,7 +107,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
         saveSlots = new ArrayList<>();
         saves = SaveGameService.getSaves();
         for (int i = 0; i < 4; i++) {
-            SaveSlot slot = new SaveSlot(saveSlotWidth, saveSlotHeight, maximumLevelIndex, saves.get(i), uiStage);
+            SaveSlot slot = new SaveSlot(saveSlotWidth, saveSlotHeight, LEVEL_COUNT, saves.get(i), uiStage);
             if (highlightIndex == -1 && !slot.isEmptySlot()) {
                 highlightIndex = i;
             }
@@ -296,7 +300,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
     private void changeSelection(int direction) {
         lastSelection = 0;
-        currentLevelIndex = MathUtils.clamp(currentLevelIndex + direction, MINIMUM_LEVEL_INDEX, maximumLevelIndex);
+        currentLevelIndex = MathUtils.clamp(currentLevelIndex + direction, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
         if (currentLevelIndex > nextLevelIndex) {
             currentLevelIndex = previousLevelIndex;
         } else {
@@ -321,7 +325,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
         }
 
 
-        currentLevelIndex = MathUtils.clamp(nextLevelIndex, MINIMUM_LEVEL_INDEX, maximumLevelIndex);
+        currentLevelIndex = MathUtils.clamp(nextLevelIndex, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
         previousLevelIndex = currentLevelIndex;
         LevelStamp nextLevel = levels.get(currentLevelIndex);
 
