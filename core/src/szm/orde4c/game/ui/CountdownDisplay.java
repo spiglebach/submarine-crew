@@ -7,19 +7,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.BaseGame;
 import szm.orde4c.game.event.CountdownFinishedEvent;
+import szm.orde4c.game.util.Assets;
 
 public class CountdownDisplay extends BaseActor {
     private final float COUNTDOWN_TIME;
     private float timeLeft;
     private Label timeLabel;
-    boolean countingDown;
+    private boolean countingDown;
 
     public CountdownDisplay(float countdownTime, Stage s) {
         super(0, 0, s);
         COUNTDOWN_TIME = countdownTime;
         timeLeft = COUNTDOWN_TIME;
         countingDown = false;
-        loadTexture("platform.png");
+        loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setColor(Color.BLACK);
         setOpacity(0.5f);
         setSize(s.getWidth(), s.getHeight());
@@ -27,7 +28,7 @@ public class CountdownDisplay extends BaseActor {
         Table table = new Table();
         table.setFillParent(true);
 
-        timeLabel = new Label(String.valueOf(timeLeft), BaseGame.largeLabelStyle);
+        timeLabel = new Label(String.valueOf(timeLeft), BaseGame.labelStyle);
         table.add(timeLabel).expand();
         addActor(table);
         setVisible(false);
