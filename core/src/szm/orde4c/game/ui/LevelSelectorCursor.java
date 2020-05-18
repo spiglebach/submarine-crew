@@ -1,9 +1,9 @@
 package szm.orde4c.game.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.BaseActor;
+import szm.orde4c.game.util.Assets;
 
 public class LevelSelectorCursor extends BaseActor {
     private LevelStamp nextLevel;
@@ -14,9 +14,8 @@ public class LevelSelectorCursor extends BaseActor {
     public LevelSelectorCursor(LevelStamp level, Stage s) {
         super(0, 0, s);
         nextLevel = level;
-        loadTexture("platform.png");
-        setSize(100, 100);
-        setColor(Color.RED);
+        loadAnimationFromSheet(Assets.instance.getTexture(Assets.LEVEL_SELECTOR_CURSOR), 1, 4, 0.2f, true);
+        setSize(50, 50);
         setPosition(nextLevel.getX(), nextLevel.getY());
         transitionStartingPosition = new Vector2(nextLevel.getX(), nextLevel.getY());
         transitionTimeLeft = 0;
@@ -45,6 +44,9 @@ public class LevelSelectorCursor extends BaseActor {
         if (transitionTimeLeft <= 0) {
             transitionTimeLeft = 0;
             setPosition(nextLevel.getX(), nextLevel.getY());
+            setAnimationPaused(true);
+        } else {
+            setAnimationPaused(false);
         }
     }
 }
