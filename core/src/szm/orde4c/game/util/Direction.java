@@ -1,4 +1,4 @@
-package szm.orde4c.game.ui;
+package szm.orde4c.game.util;
 
 public enum Direction {
     NORTH,
