@@ -1,5 +1,5 @@
 buildscript {
-    
+
 
     repositories {
         mavenLocal()
@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.9'
-        
+
 
     }
 }
@@ -66,6 +66,7 @@ project(":tests") {
     sourceSets.test.java.srcDirs = ["src/"]
 
     dependencies {
+        compile group: 'systems.manifold', name: 'manifold-ext', version: '2019.1.12'
         compile project(":core")
 
         compile "junit:junit:4.+"
@@ -75,10 +76,24 @@ project(":tests") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 
         testCompile 'junit:junit:4.+'
-        testCompile "org.mockito:mockito-all:1.9.+"
 
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+        // Add manifold to -processorpath for javac (for Java 9+)
+        annotationProcessor group: 'systems.manifold', name: 'manifold-ext', version: '2019.1.12'
+    }
+
+    compileJava {
+        doFirst() {
+            options.compilerArgs += ['-Xplugin:Manifold']
+        }
+    }
+
+    compileTestJava {
+        doFirst() {
+            options.compilerArgs += ['-Xplugin:Manifold']
+        }
     }
 }
