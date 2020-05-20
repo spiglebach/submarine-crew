@@ -20,13 +20,18 @@ public class ArmStation extends Station {
 
     @Override
     public void operate() {
-        Controller controller = getOperatingPlayer().getController();
-        if (controller != null) {
-            activated = controller.getButton(XBoxGamepad.BUTTON_X);
+        if (isOperated()) {
+            Controller controller = getOperatingPlayer().getController();
+            if (controller != null) {
+                activated = controller.getButton(XBoxGamepad.BUTTON_X);
+            } else {
+                activated = Gdx.input.isKeyPressed(Input.Keys.E);
+            }
+            arm.operate(operatingPlayer.getController());
         } else {
-            activated = Gdx.input.isKeyPressed(Input.Keys.E);
+            arm.makeAutonomousAction();
         }
-        arm.operate(operatingPlayer.getController());
+
     }
 
     @Override
@@ -56,6 +61,9 @@ public class ArmStation extends Station {
     public void continiousEnergyConsumption(float delta) {
         if (activated && ArmType.DRILL.equals(arm.getType())) {
             submarine.decreaseEnergy(Arm.DRILLING_ENERY_COST * delta);
+            if (submarine.getEnergy() <= 0) {
+                activated = false;
+            }
         }
     }
 }

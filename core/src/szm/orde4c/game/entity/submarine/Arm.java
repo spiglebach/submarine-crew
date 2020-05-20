@@ -14,14 +14,18 @@ import szm.orde4c.game.base.XBoxGamepad;
 import szm.orde4c.game.entity.Cuttable;
 import szm.orde4c.game.entity.Damageable;
 import szm.orde4c.game.entity.Drillable;
-import szm.orde4c.game.entity.Fish;
-import szm.orde4c.game.ui.Direction;
+import szm.orde4c.game.entity.Enemy;
+import szm.orde4c.game.util.Direction;
 import szm.orde4c.game.util.ArmType;
+import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.CustomActions;
 
+import java.util.ArrayList;
+
 public class Arm extends BaseActor {
-    private float length = 300;
-    private float girth = 60;
+    public static final float DRILLING_ENERY_COST = 1;
+    private float length = 100;
+    private float girth = 30;
     private Direction direction;
 
     private float extensionPercent;
@@ -35,13 +39,16 @@ public class Arm extends BaseActor {
     private ArmTool tool;
     private ArmType armType;
 
+    private Polygon sensorPolygon;
+    private ArrayList<BaseActor> objectsInRange;
+
     public Arm(float x, float y, Direction direction, Stage s) {
         super(x, y, s);
         this.direction = direction;
         this.armType = ArmType.DRILL;
         extensionPercent = 0.5f;
         extensionRate = 5;
-        loadTexture("platform.png");
+        loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setSize(length, girth);
         setPosition(x, y - girth / 2.0f);
         setOrigin(0, girth / 2f);
@@ -70,10 +77,29 @@ public class Arm extends BaseActor {
         setBoundaryRectangle();
 
         setRotationLimit(30);
-        setRotationSpeed(40);
+        setRotationSpeed(60);
 
         tool = new ArmTool(this);
         retract();
+
+        float[] vertices = new float[8];
+        Vector2 sensorPerimeterVector = new Vector2(length * minExtensionPercent, 0);
+        sensorPerimeterVector.rotate(rotationLimit);
+        vertices[0] = sensorPerimeterVector.x;
+        vertices[1] = sensorPerimeterVector.y;
+        sensorPerimeterVector.rotate(-rotationLimit * 2);
+        vertices[2] = sensorPerimeterVector.x;
+        vertices[3] = sensorPerimeterVector.y;
+        sensorPerimeterVector.set(length * maxExtensionPercent, 0);
+        sensorPerimeterVector.rotate(-rotationLimit);
+        vertices[4] = sensorPerimeterVector.x;
+        vertices[5] = sensorPerimeterVector.y;
+        sensorPerimeterVector.rotate(rotationLimit * 2);
+        vertices[6] = sensorPerimeterVector.x;
+        vertices[7] = sensorPerimeterVector.y;
+        sensorPolygon = new Polygon(vertices);
+
+        objectsInRange = new ArrayList<>();
     }
 
     public void operate(Controller controller) {
@@ -161,29 +187,46 @@ public class Arm extends BaseActor {
         if (!Intersector.overlapConvexPolygons(boundaryPolygon, other.getBoundaryPolygon(), mtv)) {
             return null;
         }
-
-        getParent().moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
-
+        if (isBeingExtended() || isBeingRotated()) {
+            if (isBeingExtended()) {
+                stopExtension();
+            }
+            if (isBeingRotated()) {
+                stopRotation();
+            }
+        } else {
+            getParent().moveBy(mtv.normal.x * mtv.depth, mtv.normal.y * mtv.depth);
+        }
         return mtv.normal;
     }
 
     @Override
     public boolean overlaps(BaseActor other) {
-        if ((ArmType.DRILL.equals(armType) && station.isActivated() && (other instanceof Drillable || other instanceof Fish)) || (ArmType.CUTTER.equals(armType) && (other instanceof Cuttable || other instanceof Fish))) {
+        if ((ArmType.DRILL.equals(armType) && station.isActivated() && (other instanceof Drillable || other instanceof Enemy)) || (ArmType.CUTTER.equals(armType) && (other instanceof Cuttable || other instanceof Enemy))) {
             if (Intersector.overlapConvexPolygons(getTransformedToolBoundaryPolygon(), other.getBoundaryPolygon())) {
                 if (other instanceof Damageable) {
                     ((Damageable) other).damage(20);
                 }
             }
-
         }
-        // TODO
-
-
-        /*if ((armType.equals(ArmType.DRILL) && station.isActivated() && other instanceof Drillable) || (armType.equals(ArmType.CUTTER) && other instanceof Cuttable)) {
-            return Intersector.overlapConvexPolygons(getTransformedToolBoundaryPolygon(), other.getBoundaryPolygon());
-        }*/
         return false;
+    }
+
+    private Polygon getSensorPolygon() {
+        Vector2 parentPosition = ((BaseActor) getParent()).getPosition();
+        Vector2 parentOrigin = new Vector2(getParent().getOriginX(), getParent().getOriginY());
+        Vector2 armPosition = getPosition();
+
+        Vector2 parentOriginToPosition = armPosition.cpy().sub(parentOrigin);
+        parentOriginToPosition.rotate(getParent().getRotation());
+
+        Vector2 totalPosition = parentPosition.cpy().add(parentOrigin).add(parentOriginToPosition);
+
+        sensorPolygon.setPosition(totalPosition.x, totalPosition.y);
+        sensorPolygon.setRotation(getParent().getRotation() + initialRotation);
+        sensorPolygon.setScale(1.2f, 1.2f);
+
+        return sensorPolygon;
     }
 
     private Polygon getTransformedTotalPolygon() {
@@ -270,5 +313,108 @@ public class Arm extends BaseActor {
 
     public void setStation(Station station) {
         this.station = station;
+    }
+
+    private boolean isBeingExtended() {
+        return extensionAmount > 0;
+    }
+
+    private void stopExtension() {
+        extensionAmount = 0;
+    }
+
+    private boolean isBeingRotated() {
+        return rotationDirection != 0;
+    }
+
+    private void stopRotation() {
+        rotationDirection = 0;
+    }
+
+    private boolean sensorPolygonOverlaps(BaseActor other) {
+        Polygon poly1 = getSensorPolygon();
+        Polygon poly2 = other.getBoundaryPolygon();
+        if (!poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle())) {
+            return false;
+        }
+        return Intersector.overlapConvexPolygons(poly1, poly2);
+    }
+
+    public void ifArmIsNotOperatedThenProcessEnvironmentObjectWithSensorPolygon(BaseActor environmentActor) {
+        if (station.getOperatingPlayer() != null) {
+            return;
+        }
+        if (sensorPolygonOverlaps(environmentActor)) {
+            objectsInRange.add(environmentActor);
+        }
+    }
+
+    public void makeAutonomousAction() {
+        if (station.getOperatingPlayer() != null) {
+            return;
+        }
+        float extensionDirection = 0;
+        int rotationDirection = 0;
+        Vector2 parentPosition = ((BaseActor) getParent()).getPosition();
+        Vector2 parentOrigin = new Vector2(getParent().getOriginX(), getParent().getOriginY());
+        Vector2 armPosition = getPosition();
+        Vector2 parentOriginToPosition = armPosition.cpy().sub(parentOrigin);
+        parentOriginToPosition.rotate(getParent().getRotation());
+
+        Vector2 armStart = parentPosition.cpy().add(parentOrigin).add(parentOriginToPosition);
+
+        float[] extensionPercents = new float[]{
+                minExtensionPercent,
+                (minExtensionPercent + extensionPercent) * 0.5f,
+                extensionPercent,
+                (extensionPercent + maxExtensionPercent) * 0.5f,
+                maxExtensionPercent};
+        float[] rotations = new float[]{
+                getRotation(),
+                (initialRotation - rotationLimit + getRotation()) * 0.5f,
+                (initialRotation + rotationLimit - getRotation()) * 0.5f,
+                initialRotation - rotationLimit,
+                initialRotation + rotationLimit
+        };
+        for (float expectedExtension : extensionPercents) {
+            for (float expectedRotation : rotations) {
+                for (BaseActor object : objectsInRange) {
+                    Polygon otherPolygon = object.getBoundaryPolygon();
+                    Vector2 armEnd = new Vector2(length * expectedExtension + girth, 0);
+                    Vector2 armBodyEnd = new Vector2(length * expectedExtension, 0);
+                    armEnd.rotate(expectedRotation);
+                    armBodyEnd.rotate(expectedRotation);
+                    armEnd.add(armStart);
+                    armBodyEnd.add(armStart);
+                    if (!(object instanceof Damageable)) {
+                        continue;
+                    }
+                    if ((object instanceof Drillable && !ArmType.DRILL.equals(armType)) || object instanceof Cuttable && !ArmType.CUTTER.equals(armType)) {
+                        switchTool();
+                    }
+                    if (Intersector.intersectSegmentPolygon(armBodyEnd, armEnd, otherPolygon)) {
+                        if (expectedExtension > extensionPercent) {
+                            extensionDirection = 1;
+                        } else if (expectedExtension < extensionPercent) {
+                            extensionDirection = -1;
+                        }
+                        if (expectedRotation > getRotation()) {
+                            rotationDirection = 1;
+                        } else if (expectedRotation < getRotation()) {
+                            rotationDirection = -1;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        station.activated = objectsInRange.size() > 0;
+        if (!station.activated) {
+            retract();
+        }
+        extendInDirection(extensionDirection);
+        rotate(rotationDirection);
+        station.activated = extensionDirection != 0 || rotationDirection != 0;
+        objectsInRange.clear();
     }
 }
