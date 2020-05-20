@@ -2,19 +2,22 @@ package szm.orde4c.game.entity.submarine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
 
-public class Player extends BaseActor {
+public class Player extends BaseActor implements ControllerListener, InputProcessor {
+    private static final float ELEVATOR_CONTROLLER_DEADZONE = 0.6f;
+    private static final float PLAYER_MOVEMENT_CONTROLLER_DEADZONE = 0.5f;
     private float walkDeceleration;
     private float walkAcceleration;
     private float maxHorizontalSpeed;
@@ -37,37 +40,33 @@ public class Player extends BaseActor {
     private boolean keyboardPlayer;
 
     private Station station;
+    private Submarine submarine;
 
-    public Player(float x, float y, PlayerInfo info, Stage s) {
+    public Player(float x, float y, PlayerInfo info, Submarine submarine, Stage s) {
         super(x, y, s);
+        this.submarine = submarine;
         animationMoving = loadAnimationFromSheet("player/player.png", 1, 4, 0.1f, true);
-        setSize(80, 110);
+        setSize(18, 23);
         setBoundaryRectangle();
 
         maxHorizontalSpeed = 300;
         maxVerticalSpeed = 500;
         walkAcceleration = 300;
-        walkDeceleration = 600;
+        walkDeceleration = 70000;
         gravity = 700;
         jumpSpeed = 450;
         climbing = false;
         station = null;
 
         keyboardPlayer = ControlType.KEYBOARD.equals(info.getControlType());
-
-        if (!keyboardPlayer) {
-            controller = info.getAssignedController();
-        }
         setColor(info.getColor());
 
-
         belowSensor = new BaseActor(0, 0, s);
-        belowSensor.loadTexture("platform.png");
-        belowSensor.setSize(this.getWidth() - 8, 8);
+        belowSensor.setSize(this.getWidth() - 4, 8);
         belowSensor.setBoundaryRectangle();
-        belowSensor.setVisible(true);
+        belowSensor.setVisible(false);
         addActor(belowSensor);
-        belowSensor.setPosition(getWidth() / 2.0f - belowSensor.getWidth() / 2.0f,- belowSensor.getHeight() - 4);
+        belowSensor.setPosition(getWidth() / 2.0f - belowSensor.getWidth() / 2.0f, -belowSensor.getHeight() - 4);
     }
 
     @Override
@@ -93,22 +92,22 @@ public class Player extends BaseActor {
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 xAxis += -1.0f;
             }
-        }
-
-        Vector2 direction = new Vector2(xAxis, yAxis);
-        float deadZone = 0.2f;
-
-
-        if (climbing) {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                accelerationVector.add(0, walkAcceleration);
+                yAxis = 1.0f;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                accelerationVector.add(0, -walkAcceleration);
+                yAxis = -1.0f;
+            }
+        }
+        Vector2 direction = new Vector2(xAxis, yAxis);
+
+        if (climbing) {
+            if (Math.abs(direction.y) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
+                accelerationVector.add(0, walkAcceleration * direction.y);
             }
         } else {
             accelerationVector.add(0, -gravity);
-            if (Math.abs(direction.x) > deadZone) {
+            if (Math.abs(direction.x) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
                 accelerationVector.add(walkAcceleration * direction.x, 0);
                 moved = true;
             }
@@ -118,7 +117,7 @@ public class Player extends BaseActor {
 
         velocityVector.add(accelerationVector.x * delta, accelerationVector.y * delta);
 
-        if (!Gdx.input.isKeyPressed(Input.Keys.A) && !Gdx.input.isKeyPressed(Input.Keys.D) && !moved) {
+        if (!moved) {
             float decelerationAmount = walkDeceleration * delta;
 
             float walkDirection;
@@ -138,8 +137,13 @@ public class Player extends BaseActor {
             velocityVector.x = walkSpeed * walkDirection;
         }
 
-        // TODO Climbing
-        if (climbing && !Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (yAxis > 0 && Math.abs(yAxis) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
+            climbUp();
+        }
+        if (yAxis < 0 && Math.abs(yAxis) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
+            climbDown();
+        }
+        if (climbing && !Gdx.input.isKeyPressed(Input.Keys.W) && !Gdx.input.isKeyPressed(Input.Keys.S) && Math.abs(direction.y) < PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
             stopMovementY();
         }
 
@@ -163,10 +167,6 @@ public class Player extends BaseActor {
         return climbing;
     }
 
-    public void setClimbing(boolean climbing) {
-        this.climbing = climbing;
-    }
-
     public void setStation(Station station) {
         this.station = station;
     }
@@ -179,29 +179,11 @@ public class Player extends BaseActor {
         return controller;
     }
 
-    public void buttonPressed(int buttonCode) {
-        if (isOperatingStation()) {
-            if (buttonCode == XBoxGamepad.BUTTON_B) {
-                station.setOperatingPlayer(null);
-                station = null;
-            } else {
-                station.buttonPressed(buttonCode);
-            }
-            return;
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.ESCAPE) {
+            return false;
         }
-        if (climbing) {
-            if (buttonCode == XBoxGamepad.BUTTON_B) {
-                stopClimbing();
-            }
-            return;
-        }
-        if (buttonCode == XBoxGamepad.BUTTON_A) {
-            jump();
-            return;
-        }
-    }
-
-    public void keyDown(int keycode) {
         if (isOperatingStation()) {
             if (keycode == Input.Keys.F) {
                 station.setOperatingPlayer(null);
@@ -209,46 +191,156 @@ public class Player extends BaseActor {
             } else {
                 station.keyDown(keycode);
             }
-            return;
+            return true;
         }
         if (climbing) {
             if (keycode == Input.Keys.F || keycode == Input.Keys.A || keycode == Input.Keys.D) {
                 stopClimbing();
             }
-            return;
+            return true;
         }
-        if (keycode == Input.Keys.W || keycode == Input.Keys.S) {
-            climb();
+        if (keycode == Input.Keys.W) {
+            if (!submarine.useElevatorUp(this)) {
+                climbUp();
+            }
+            return true;
+        }
+        if (keycode == Input.Keys.S) {
+            if (!submarine.useElevatorDown(this)) {
+                climbDown();
+            }
+            return true;
         }
         if (keycode == Input.Keys.SPACE) {
             jump();
-            return;
+            return true;
         }
+        return false;
     }
 
-    public void axisMoved(int axisCode, float value) {
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
+
+    @Override
+    public boolean buttonDown(Controller controller, int buttonCode) {
+        if (isOperatingStation()) {
+            if (buttonCode == XBoxGamepad.BUTTON_B) {
+                station.setOperatingPlayer(null);
+                station = null;
+            } else {
+                station.buttonPressed(buttonCode);
+            }
+            return true;
+        }
+        if (climbing) {
+            if (buttonCode == XBoxGamepad.BUTTON_B) {
+                stopClimbing();
+            }
+            return true;
+        }
+        if (buttonCode == XBoxGamepad.BUTTON_A) {
+            jump();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean axisMoved(Controller controller, int axisCode, float value) {
         if (isOperatingStation()) {
             station.axisMoved(axisCode, value);
+            return true;
         }
+        if (axisCode == XBoxGamepad.AXIS_LEFT_Y) {
+            if (Math.abs(value) > ELEVATOR_CONTROLLER_DEADZONE) {
+                if (-value > 0) {
+                    if (submarine.useElevatorUp(this)) {
+                        return true;
+                    }
+                } else {
+                    if (submarine.useElevatorDown(this)) {
+                        return true;
+                    }
+                }
+            }
+            if (Math.abs(value) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
+                if (-value > 0) {
+                    climbUp();
+                } else {
+                    climbDown();
+                }
+            }
+        }
+        if (axisCode == XBoxGamepad.AXIS_LEFT_X && Math.abs(value) > PLAYER_MOVEMENT_CONTROLLER_DEADZONE) {
+            stopClimbing();
+        }
+        return false;
     }
 
-    private void climb() {
+    private void climb(int direction) {
         if (!climbing) {
             for (BaseActor ladderActor : BaseActor.getList(getParent(), "szm.orde4c.game.entity.submarine.Ladder")) {
                 if (overlaps(ladderActor) || belowOverlaps(ladderActor)) {
-                    stopMovementX();
-                    velocityVector.y = MathUtils.clamp(velocityVector.y, 0, maxVerticalSpeed);
-                    climbedLadder = (Ladder) ladderActor;
-                    climbing = true;
-                    boolean above = getY() >= ladderActor.getY() + ladderActor.getHeight() - this.getHeight();
-                    if (above) {
-                        setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, ladderActor.getY() + ladderActor.getHeight() - getHeight());
+                    if (direction > 0) {
+                        climbing = getY() < ladderActor.getY() + ladderActor.getHeight() - getHeight() / 2f;
                     } else {
-                        setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, this.getY());
+                        climbing = getY() > ladderActor.getY() + getHeight() / 2f;
+                    }
+                    if (climbing) {
+                        stopMovementX();
+                        velocityVector.y = MathUtils.clamp(velocityVector.y, 0, maxVerticalSpeed);
+                        climbedLadder = (Ladder) ladderActor;
+                        boolean above = getY() >= ladderActor.getY() + ladderActor.getHeight() - this.getHeight();
+                        if (above) {
+                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, ladderActor.getY() + ladderActor.getHeight() - getHeight());
+                        } else {
+                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, this.getY());
+                        }
+                        break;
                     }
                 }
             }
         }
+    }
+
+    private void climbUp() {
+        climb(1);
+    }
+
+    private void climbDown() {
+        climb(-1);
     }
 
     private void stopClimbing() {
@@ -265,5 +357,40 @@ public class Player extends BaseActor {
         belowPolygon.setPosition(getX() + belowSensor.getX(), getY() + belowSensor.getY());
 
         return Intersector.overlapConvexPolygons(belowPolygon, other.getBoundaryPolygon());
+    }
+
+    @Override
+    public void connected(Controller controller) {
+
+    }
+
+    @Override
+    public void disconnected(Controller controller) {
+
+    }
+
+    @Override
+    public boolean buttonUp(Controller controller, int buttonCode) {
+        return false;
+    }
+
+    @Override
+    public boolean povMoved(Controller controller, int povCode, PovDirection value) {
+        return false;
+    }
+
+    @Override
+    public boolean xSliderMoved(Controller controller, int sliderCode, boolean value) {
+        return false;
+    }
+
+    @Override
+    public boolean ySliderMoved(Controller controller, int sliderCode, boolean value) {
+        return false;
+    }
+
+    @Override
+    public boolean accelerometerMoved(Controller controller, int accelerometerCode, Vector3 value) {
+        return false;
     }
 }

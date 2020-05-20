@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.XBoxGamepad;
 
 public class ShieldStation extends Station {
+    private static final int CHARGE_AMOUNT = 5;
+
     public ShieldStation(float x, float y, float width, float height, Submarine submarine, Stage s) {
         super(x, y, width, height, submarine, s);
     }
@@ -38,8 +40,10 @@ public class ShieldStation extends Station {
     }
 
     private void chargeSubmarineShields() {
-        oneTimeEnergyConsumption(5);
-        submarine.increaseShield(5);
+        if (submarine.getEnergy() > CHARGE_AMOUNT) {
+            oneTimeEnergyConsumption(CHARGE_AMOUNT);
+            submarine.increaseShield(CHARGE_AMOUNT);
+        }
     }
 
     @Override

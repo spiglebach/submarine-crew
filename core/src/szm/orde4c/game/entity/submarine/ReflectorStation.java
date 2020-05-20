@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
+import szm.orde4c.game.util.Assets;
 
 public class ReflectorStation extends Station {
     private static final float ACTIVE_REFLECTOR_COST = 3;
@@ -20,8 +21,8 @@ public class ReflectorStation extends Station {
         super(x, y, width, height, submarine, s);
         this.reflectorActor = submarine.getReflectorActor();
         reflectorActor.setRotationSpeed(30);
-        activeLight = reflectorActor.loadTexture("submarine/reflector-light-active.png");
-        inactiveLight = reflectorActor.loadTexture("submarine/reflector-light-inactive.png");
+        activeLight = reflectorActor.loadTexture(Assets.instance.getTexture(Assets.SUBMARINE_REFLECTOR_LIGHT_ACTIVE));
+        inactiveLight = reflectorActor.loadTexture(Assets.instance.getTexture(Assets.SUBMARINE_REFLECTOR_LIGHT_INACTIVE));
         reflectorActor.setAnimation(inactiveLight);
         reflectorRotation = 0;
     }
@@ -89,8 +90,10 @@ public class ReflectorStation extends Station {
 
     @Override
     public void continiousEnergyConsumption(float delta) {
-        if (activated) {
+        if (activated && submarine.getEnergyPercent() >= 0.2f) {
             submarine.decreaseEnergy(ACTIVE_REFLECTOR_COST * delta);
+        } else {
+            activated = false;
         }
     }
 }
