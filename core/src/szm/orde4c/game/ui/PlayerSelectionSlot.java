@@ -1,4 +1,4 @@
-package szm.orde4c.game.util;
+package szm.orde4c.game.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,6 +15,9 @@ import com.badlogic.gdx.utils.Queue;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
 import szm.orde4c.game.ui.ColorSelectorArrow;
+import szm.orde4c.game.util.Assets;
+import szm.orde4c.game.util.ControlType;
+import szm.orde4c.game.util.PlayerInfo;
 
 public class PlayerSelectionSlot extends BaseActor implements ControllerListener, InputProcessor {
     private static final float COLOR_SWITCH_TIME_LIMIT = 0.5f;
@@ -49,7 +52,7 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
         occupied = false;
 
         frame = new BaseActor(0, 0, stage);
-        frame.loadTexture("platform.png");
+        frame.loadTexture(Assets.instance.getTexture(Assets.BLANK));
         frame.setSize(stage.getWidth() * 0.2f, stage.getHeight() * 0.5f);
         frame.setColor(EMPTY_COLOR);
         addActor(frame);
@@ -57,13 +60,13 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
 
 
         playerDisplay = new BaseActor(0, 0, stage);
-        playerDisplay.loadAnimationFromSheet("slotplayer.png", 1, 8, 0.2f, true);
+        playerDisplay.loadAnimationFromSheet("player/slotplayer.png", 1, 8, 0.2f, true); // TODO use assetmanager
         playerDisplay.setSize(frame.getWidth(), frame.getHeight());
         playerDisplay.setVisible(false);
         frame.addActor(playerDisplay);
 
-        final float arrowWidth = 100;
-        final float arrowHeight = 160;
+        final float arrowWidth = 25;
+        final float arrowHeight = 40;
 
         leftArrow = new ColorSelectorArrow(0, frame.getHeight() / 2f, arrowWidth, arrowHeight, true, stage);
         leftArrow.setVisible(false);

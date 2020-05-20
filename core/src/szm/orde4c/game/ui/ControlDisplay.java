@@ -6,26 +6,30 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.BaseGame;
+import szm.orde4c.game.util.Assets;
 
 public class ControlDisplay extends BaseActor {
-    public static final String TEXT_PRESS_TO_JOIN_FINALIZE = "Press to join / finalize";
-    public static final String TEXT_PRESS_TO_LEAVE_CANCEL = "Press to leave / cancel";
-    public static final String TEXT_PRESS_TO_LOAD = "Press to load game";
-    public static final String TEXT_PRESS_TO_DELETE = "Press to delete save";
+    public static final String TEXT_PRESS_TO_JOIN_FINALIZE = "Csatlakozás / szín véglegesítése";
+    public static final String TEXT_PRESS_TO_LEAVE_CANCEL = "Hely elhagyása / véglegesítés visszavonása";
+    public static final String TEXT_PRESS_TO_LOAD = "Mentés / pálya kiválasztása";
+    public static final String TEXT_PRESS_TO_DELETE = "Mentés törlése";
+    public static final String TEXT_PRESS_TO_SELECT_SAVE = "Mentés választása";
+    public static final String TEXT_PRESS_TO_SELECT_LEVEL = "Szint választása";
+    public static final String TEXT_PRESS_TO_SELECT_COLOR = "Szín választása";
 
     public ControlDisplay(TextButtonIndicatorPair[] textButtonIndicatorPairs, float stageWidthScale, float stageHeightScale, float fontScale, Stage stage) {
         super(0, 0, stage);
-        loadTexture("platform.png");
+        loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setSize(stage.getWidth() * stageWidthScale, stage.getHeight() * stageHeightScale);
         setColor(Color.PURPLE);
 
         Table controlsTable = new Table();
         controlsTable.setFillParent(true);
+        controlsTable.pad(15);
         for (TextButtonIndicatorPair pair : textButtonIndicatorPairs) {
-            Label textLabel = new Label(pair.getText(), BaseGame.largeLabelStyle);
+            Label textLabel = new Label(pair.getText(), BaseGame.labelStyle);
             textLabel.setFontScale(fontScale);
 
             float totalButtonIndicatorHeight = 0;
@@ -40,7 +44,7 @@ public class ControlDisplay extends BaseActor {
             }
             buttonIndicatorGroup.setSize(totalButtonIndicatorWidth * totalButtonIndicatorHeight / getHeight(), getHeight());
 
-            controlsTable.add(textLabel).expandY();
+            controlsTable.add(textLabel).expand().right();
             controlsTable.add(buttonIndicatorGroup).expand().left();
         }
 

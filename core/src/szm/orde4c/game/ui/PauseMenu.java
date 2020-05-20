@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
+import szm.orde4c.game.util.Assets;
 
 import java.util.List;
 
@@ -20,14 +21,12 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
     private int highlightIndex = 0;
     private final float OPTION_SWITCH_TIME_LIMIT = 0.5f;
     private float lastOptionSwitch = OPTION_SWITCH_TIME_LIMIT;
-    private final float CONTROLLER_DEADZONE = 0.2f;
 
-    public PauseMenu(List<MenuLabel> menuOptions, float opacity, Stage s) {
+    public PauseMenu(List<MenuLabel> menuOptions, String backgroundFile, float opacity, Stage s) {
         super(0, 0, s);
         this.menuOptions = menuOptions;
 
-        loadTexture("platform.png");
-        setColor(Color.BLACK);
+        loadTexture(Assets.instance.getTexture(backgroundFile));
         setOpacity(opacity);
         setSize(s.getWidth(), s.getHeight());
 
@@ -37,7 +36,7 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
         table.pad(30);
 
         for (MenuLabel option : menuOptions) {
-            option.setFontScale(0.5f);
+            option.setFontScale(1f);
             table.add(option).left();
             table.add().expandX();
             table.row();
@@ -53,7 +52,8 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
             try {
                 Controller controller = Controllers.getControllers().first();
                 float yAxis = controller.getAxis(XBoxGamepad.AXIS_LEFT_Y);
-                if (Math.abs(yAxis) > CONTROLLER_DEADZONE) {
+                float controllerDeadzone = 0.2f;
+                if (Math.abs(yAxis) > controllerDeadzone) {
                     switchOption(yAxis);
                     lastOptionSwitch = 0;
                 }
