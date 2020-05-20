@@ -257,7 +257,14 @@ public class BaseActor extends Group {
     }
 
     public Animation<TextureRegion> loadAnimationFromSheet(String fileName, int rows, int cols, float frameDuration, boolean loop) {
-        Texture texture = new Texture(Gdx.files.internal(fileName));
+        return loadAnimationFromSheet(new Texture(Gdx.files.internal(fileName)), rows, cols, frameDuration, loop);
+    }
+
+    public Animation<TextureRegion> loadTexture(Texture texture) {
+        return loadAnimationFromSheet(texture, 1, 1, 1, false);
+    }
+
+    public Animation<TextureRegion> loadAnimationFromSheet(Texture texture, int rows, int cols, float frameDuration, boolean loop) {
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         int frameWidth = texture.getWidth() / cols;
         int frameHeight = texture.getHeight() / rows;
@@ -286,9 +293,7 @@ public class BaseActor extends Group {
     }
 
     public Animation<TextureRegion> loadTexture(String fileName) {
-        String[] fileNames = new String[1];
-        fileNames[0] = fileName;
-        return loadAnimationFromFiles(fileNames, 1, false);
+        return loadAnimationFromFiles(new String[]{fileName}, 1, false);
     }
 
     public void resetAnimation() {

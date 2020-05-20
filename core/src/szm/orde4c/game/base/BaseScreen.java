@@ -15,16 +15,14 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     protected Stage mainStage;
     protected Stage uiStage;
     protected Table uiTable;
-    protected boolean paused;
 
     public BaseScreen() {
-        mainStage = new Stage(new FitViewport(4096, 3072));
-        uiStage = new Stage(new FitViewport(4096, 3072));
+        mainStage = new Stage(new FitViewport(1024, 768));
+        uiStage = new Stage(new FitViewport(1024, 768));
 
         uiTable = new Table();
         uiTable.setFillParent(true);
         uiStage.addActor(uiTable);
-        paused = false;
 
         initialize();
     }
@@ -35,9 +33,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float dt) {
-        if (!paused) {
-            mainStage.act(dt);
-        }
+        mainStage.act(dt);
         uiStage.act(dt);
 
         update(dt);
@@ -65,12 +61,10 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
-        paused = true;
     }
 
     @Override
     public void resume() {
-        paused = false;
     }
 
     @Override
@@ -83,7 +77,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void dispose() {
-
+        mainStage.dispose();
+        uiStage.dispose();
     }
 
     @Override

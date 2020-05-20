@@ -34,7 +34,7 @@ public class TileMapActor extends Actor {
     private int mapWidth;
     private int mapHeight;
 
-    public TileMapActor(String filename, Stage stage) {
+    public TileMapActor(String filename) {
         tiledMap = new TmxMapLoader().load(filename);
 
         tileWidth = (int) tiledMap.getProperties().get("tilewidth");
@@ -46,7 +46,7 @@ public class TileMapActor extends Actor {
     }
 
     public TileMapActor(String filename, Stage stage, boolean setCamera) {
-        this(filename, stage);
+        this(filename);
 
         BaseActor.setWorldBounds(mapWidth, mapHeight);
 
