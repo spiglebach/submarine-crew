@@ -9,6 +9,7 @@ import szm.orde4c.game.base.BaseGamepadScreen;
 import szm.orde4c.game.service.SaveGameService;
 import szm.orde4c.game.ui.MenuLabel;
 import szm.orde4c.game.ui.PauseMenu;
+import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.Save;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
     public void initialize() {
         ArrayList<MenuLabel> menuOptions = new ArrayList<>();
         if (!SaveGameService.allSaveSlotsOccupied()) {
-            MenuLabel newGame = new MenuLabel("Új játék", BaseGame.largeLabelStyle) {
+            MenuLabel newGame = new MenuLabel("Új játék", BaseGame.labelStyle) {
                 @Override
                 public void execute() {
                     removeMainControllerListener();
@@ -34,7 +35,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
         }
 
         if (SaveGameService.hasAtLeastOneSave()) {
-            MenuLabel loadGame = new MenuLabel("Játék betöltése", BaseGame.largeLabelStyle) {
+            MenuLabel loadGame = new MenuLabel("Játék betöltése", BaseGame.labelStyle) {
                 @Override
                 public void execute() {
                     removeMainControllerListener();
@@ -44,7 +45,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
             menuOptions.add(loadGame);
         }
 
-        MenuLabel exit = new MenuLabel("Kilépés", BaseGame.largeLabelStyle) {
+        MenuLabel exit = new MenuLabel("Kilépés", BaseGame.labelStyle) {
             @Override
             public void execute() {
                 Gdx.app.exit();
@@ -52,8 +53,8 @@ public class MainMenuScreen extends BaseGamepadScreen {
         };
         menuOptions.add(exit);
 
-        pauseMenu = new PauseMenu(menuOptions, 1f, uiStage);
-        uiTable.add(pauseMenu);
+        pauseMenu = new PauseMenu(menuOptions, Assets.MENU_SCREEN, 1f, uiStage);
+        uiTable.add(pauseMenu).expand();
 
         try {
             Controllers.getControllers().first().addListener(pauseMenu);

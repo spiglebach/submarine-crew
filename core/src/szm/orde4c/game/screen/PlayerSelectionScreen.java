@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.BaseGame;
 import szm.orde4c.game.base.BaseGamepadScreen;
 import szm.orde4c.game.base.XBoxGamepad;
@@ -18,7 +15,8 @@ import szm.orde4c.game.ui.CountdownDisplay;
 import szm.orde4c.game.ui.TextButtonIndicatorPair;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
-import szm.orde4c.game.util.PlayerSelectionSlot;
+import szm.orde4c.game.ui.PlayerSelectionSlot;
+import szm.orde4c.game.util.Save;
 
 import java.util.ArrayList;
 
@@ -27,6 +25,14 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
     private ArrayList<PlayerSelectionSlot> slots;
     private ControlDisplay controlDisplay;
     private CountdownDisplay countdownDisplay;
+
+    private Save save;
+    private int currentLevelIndex;
+
+    public PlayerSelectionScreen(int currentLevelIndex, Save save) {
+        this.currentLevelIndex = currentLevelIndex;
+        this.save = save;
+    }
 
     @Override
     public void initialize() {
@@ -39,14 +45,18 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
         }
 
         uiTable.row();
-        controlDisplay = new ControlDisplay(
+        uiTable.add(new ControlDisplay(
                 new TextButtonIndicatorPair[]{
                         new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_JOIN_FINALIZE,
-                                                    new int[]{ButtonIndicator.CONTROLLER_FACE_BUTTON_WEST, ButtonIndicator.KEYBOARD_BUTTON_E}),
-                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_LEAVE_CANCEL,
-                                                    new int[]{ButtonIndicator.CONTROLLER_FACE_BUTTON_EAST, ButtonIndicator.KEYBOARD_BUTTON_F})},
-                1f, 0.2f, 0.5f, uiStage);
-        uiTable.add(controlDisplay).colspan(4).expandY().top();
+                                new int[]{ButtonIndicator.CONTROLLER_FACE_WEST, ButtonIndicator.KEYBOARD_E}),
+                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_SELECT_COLOR,
+                                new int[]{ButtonIndicator.CONTROLLER_JOYSTICK_X, ButtonIndicator.KEYBOARD_AD})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(4).expandX().top();
+        uiTable.row();
+        uiTable.add(new ControlDisplay(new TextButtonIndicatorPair[]{
+                new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_LEAVE_CANCEL,
+                        new int[]{ButtonIndicator.CONTROLLER_FACE_EAST, ButtonIndicator.KEYBOARD_F})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(4).expand().top();
 
 
         countdownDisplay = new CountdownDisplay(3, uiStage);
@@ -81,7 +91,27 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
                 return true;
             }
         }
+        if (keycode == Input.Keys.F) {
+            for (PlayerSelectionSlot slot : slots) {
+                if (slot.isOccupied() && ControlType.KEYBOARD.equals(slot.getPlayerInfo().getControlType())) {
+                    return false;
+                }
+            }
+            returnToLoadGameScreen();
+        }
         return false;
+    }
+
+    private void returnToLoadGameScreen() {
+        InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
+        im.removeProcessor(this);
+        for (PlayerSelectionSlot slot : slots) {
+            im.removeProcessor(slot);
+            if (slot.isOccupied() && slot.getPlayerInfo().getAssignedController() != null) {
+                slot.getPlayerInfo().getAssignedController().removeListener(slot);
+            }
+        }
+        BaseGame.setActiveScreen(new LoadGameScreen());
     }
 
     @Override
@@ -144,6 +174,9 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
                 if (slots.get(j).isOccupied()) {
                     PlayerSelectionSlot slot = slots.get(j);
                     players[i] = slot.getPlayerInfo();
+                    if (slot.getAssignedController() != null) {
+                        slot.getAssignedController().removeListener(slot);
+                    }
                     startIndex = j + 1;
                     break;
                 }
@@ -151,6 +184,6 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
         }
         InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
         im.clear();
-        BaseGame.setActiveScreen(new LevelScreen(players));
+        BaseGame.setActiveScreen(new LevelScreen(currentLevelIndex, save, players));
     }
 }

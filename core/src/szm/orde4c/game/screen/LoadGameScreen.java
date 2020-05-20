@@ -85,7 +85,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
         float levelSelectorScaleY = plannedHeight / levelSelectorSubScreen.getHeight();
         levelSelectorSubScreen.setSize(plannedWidth, plannedHeight);
 
-        TileMapActor tileMapActor = new TileMapActor("level/level-selector.tmx", uiStage);
+        TileMapActor tileMapActor = new TileMapActor("level/level-selector.tmx");
         for (MapObject levelObject : tileMapActor.getRectangleList("Level")) {
             MapProperties levelProperties = levelObject.getProperties();
             int levelId = Integer.parseInt((String) levelProperties.get("id"));
