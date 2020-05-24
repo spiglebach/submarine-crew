@@ -387,7 +387,7 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
         batch.end();
         reflectorActor.setVisible(false);
         batch.begin();
-        batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         Color c = getColor();
         batch.setColor(c.r, c.g, c.b, c.a);

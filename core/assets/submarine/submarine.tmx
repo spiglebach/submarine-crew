@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="90" height="60" tilewidth="4" tileheight="4" infinite="0" nextlayerid="14" nextobjectid="77">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="90" height="60" tilewidth="4" tileheight="4" infinite="0" nextlayerid="14" nextobjectid="78">
  <objectgroup id="3" name="BoundaryPolygon" locked="1">
   <object id="1" x="32" y="240">
    <properties>
@@ -188,7 +188,7 @@
     <property name="name" value="Solid"/>
    </properties>
   </object>
-  <object id="42" x="0" y="44" width="84" height="52">
+  <object id="42" x="0" y="72" width="84" height="24">
    <properties>
     <property name="name" value="Solid"/>
    </properties>
@@ -322,6 +322,11 @@
     <property name="name" value="Solid"/>
    </properties>
    <polygon points="0,0 44,0 60,-20 0,-20"/>
+  </object>
+  <object id="77" x="0" y="44" width="64" height="28">
+   <properties>
+    <property name="name" value="Solid"/>
+   </properties>
   </object>
  </objectgroup>
  <objectgroup id="13" name="Start">
