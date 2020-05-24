@@ -24,7 +24,7 @@ public class SaveSlot extends BaseActor {
             Label saveNameLabel = new Label(String.format("%d. Mentés", save.getId()), BaseGame.labelStyle);
             saveNameLabel.setFontScale(0.5f);
 
-            Label completionPercentLabel = new Label("Haladás: " + completionPercent + "%", BaseGame.labelStyle);
+            Label completionPercentLabel = new Label("Teljesítettség: " + completionPercent + "%", BaseGame.labelStyle);
             completionPercentLabel.setFontScale(0.5f);
             Label completedLevelsLabel = new Label(String.format("Teljesített szintek: %d", completedLevels), BaseGame.labelStyle);
             completedLevelsLabel.setFontScale(0.5f);
