@@ -100,7 +100,7 @@ public class PauseMenu extends BaseActor implements InputProcessor, ControllerLi
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.E || keycode == Input.Keys.ENTER) {
+        if (keycode == Input.Keys.E) {
             executeSelectedMenuOption();
             return true;
         }
