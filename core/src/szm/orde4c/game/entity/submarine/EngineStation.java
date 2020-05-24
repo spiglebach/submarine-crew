@@ -48,16 +48,16 @@ public class EngineStation extends Station {
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 submarine.descend();
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 submarine.accelerateForward();
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 submarine.accelerateBackward();
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.E)) {
                 submarine.lowerNose();
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
                 submarine.liftNose();
             }
         }
