@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Queue;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
-import szm.orde4c.game.ui.ColorSelectorArrow;
 import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
@@ -22,7 +21,7 @@ import szm.orde4c.game.util.PlayerInfo;
 public class PlayerSelectionSlot extends BaseActor implements ControllerListener, InputProcessor {
     private static final float COLOR_SWITCH_TIME_LIMIT = 0.5f;
     private static final float CONTROLLER_DEADZONE = 0.2f;
-    private static final Color[] COLORS = new Color[]{Color.FIREBRICK, Color.NAVY, Color.ORANGE, Color.CYAN, Color.FOREST, Color.PINK};
+    private static final Color[] COLORS = new Color[]{Color.SCARLET, Color.NAVY, Color.ORANGE, Color.BLACK, Color.MAGENTA};
     private static final Color EMPTY_COLOR = Color.TAN;
     private static final Color OCCUPIED_COLOR = Color.WHITE;
 
@@ -60,7 +59,7 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
 
 
         playerDisplay = new BaseActor(0, 0, stage);
-        playerDisplay.loadAnimationFromSheet("player/slotplayer.png", 1, 8, 0.2f, true); // TODO use assetmanager
+        playerDisplay.loadAnimationFromSheet(Assets.instance.getTexture(Assets.PLAYER_SLOT), 1, 8, 0.2f, true);
         playerDisplay.setSize(frame.getWidth(), frame.getHeight());
         playerDisplay.setVisible(false);
         frame.addActor(playerDisplay);
