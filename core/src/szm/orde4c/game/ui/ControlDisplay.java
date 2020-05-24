@@ -23,7 +23,7 @@ public class ControlDisplay extends BaseActor {
         super(0, 0, stage);
         loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setSize(stage.getWidth() * stageWidthScale, stage.getHeight() * stageHeightScale);
-        setColor(Color.PURPLE);
+        setColor(Color.BLACK);
 
         Table controlsTable = new Table();
         controlsTable.setFillParent(true);

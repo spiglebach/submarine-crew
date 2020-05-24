@@ -14,7 +14,7 @@ public class LevelStamp extends BaseActor {
     private Animation completedStamp;
     private Animation lockedStamp;
     private Animation nextStamp;
-    private final Color COLOR_COMPLETED = Color.FOREST;
+    private final Color COLOR_COMPLETED = Color.GREEN;
     private final Color COLOR_NEXT = Color.VIOLET;
     private final Color COLOR_LOCKED = Color.LIGHT_GRAY;
     private Label levelTitle;
