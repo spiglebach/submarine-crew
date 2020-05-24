@@ -24,12 +24,12 @@ import java.util.ArrayList;
 
 public class Arm extends BaseActor {
     public static final float DRILLING_ENERY_COST = 1;
-    private float length = 100;
+    private float length = 120;
     private float girth = 30;
     private Direction direction;
 
     private float extensionPercent;
-    private final float minExtensionPercent = 0.2f;
+    private final float minExtensionPercent = 0.05f;
     private final float maxExtensionPercent = 0.9f;
     private float extensionAmount;
     private float extensionRate;
@@ -156,11 +156,14 @@ public class Arm extends BaseActor {
         applyRotation(delta);
         applyExtension(delta);
         if (ArmType.DRILL.equals(armType) && station.isActivated()) {
-            tool.setColor(Color.GREEN);
+            tool.switchToDrill();
+            tool.setAnimationPaused(false);
         } else if (ArmType.CUTTER.equals(armType)) {
-            tool.setColor(Color.YELLOW);
+            tool.switchToCutter();
+
         } else {
-            tool.setColor(Color.RED);
+            tool.switchToDrill();
+            tool.setAnimationPaused(true);
         }
     }
 
