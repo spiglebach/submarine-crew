@@ -140,9 +140,6 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            Gdx.app.exit();
-        }
         if (levelSelectionMode) {
             if (keycode == Input.Keys.D) {
                 selectNext();
