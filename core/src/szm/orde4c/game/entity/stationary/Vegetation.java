@@ -6,8 +6,8 @@ import szm.orde4c.game.entity.Cuttable;
 import szm.orde4c.game.util.Assets;
 
 public class Vegetation extends RandomizedAreaObject implements Cuttable {
-    private static final float MINIMUM_SIZE = 100; // TODO modify size
-    private static final float MAXIMUM_SIZE = 300;
+    private static final float MINIMUM_SIZE = 100;
+    private static final float MAXIMUM_SIZE = 250;
     private static final int MAXIMUM_HEALTH = 100;
     private static final int MINIMUM_HEALTH = 50;
     private static final String[] FILE_NAMES = new String[]{

@@ -10,8 +10,8 @@ public class Rock extends RandomizedAreaObject implements Drillable {
     private static final float COLOR_BLUE = 0;
     private static final float COLOR_GREEN_MINIMUM = 0.5f;
     private static final float COLOR_GREEN_MAXIMUM= 1;
-    private static final float MINIMUM_SIZE = 100; // TODO modify size
-    private static final float MAXIMUM_SIZE = 300;
+    private static final float MINIMUM_SIZE = 100;
+    private static final float MAXIMUM_SIZE = 250;
     private static final int MINIMUM_HEALTH = 20;
     private static final int MAXIMUM_HEALTH = 40;
     private static final String[] FILE_NAMES = new String[] {
