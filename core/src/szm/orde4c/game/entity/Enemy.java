@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.entity.submarine.Submarine;
 import szm.orde4c.game.util.Assets;
@@ -14,12 +15,12 @@ import java.util.*;
 
 public class Enemy extends BaseActor implements Damageable {
     private float maximumDistanceFromSubmarineBeforeDeletion;
-    private final float MAX_COLLISTION_DAMAGE_COOLDOWN = 3f;
-    private float collisionDamageCooldown;
-    private final int MAX_HEALTH = 500;
+    private final float MAX_DAMAGE_COOLDOWN = 1f;
+    private float damageCooldown;
+    private final int MAX_HEALTH = 150;
 
     private final int PROJECTILE_COUNT = 5;
-    private final float PROJECTILE_COOLDOWN = 5;
+    private final float PROJECTILE_COOLDOWN = 3;
     private int projectileCount;
     private float projectileCooldown;
 
@@ -37,8 +38,8 @@ public class Enemy extends BaseActor implements Damageable {
 
     public Enemy(float x, float y, Stage s) {
         super(x, y, s);
-        maximumDistanceFromSubmarineBeforeDeletion = getStage().getWidth() * 2;
-        loadAnimationFromSheet("enemy/enemy.png", 1, 5, 0.05f, true); // TODO use assetmanager
+        maximumDistanceFromSubmarineBeforeDeletion = getStage().getWidth() * 3;
+        loadAnimationFromSheet(Assets.instance.getTexture(Assets.ENEMY), 1, 5, 0.05f, true);
         setSize(75, 75);
         setOrigin(getWidth() / 2f, getHeight() / 2f);
         setBoundaryPolygon(10);
@@ -46,7 +47,7 @@ public class Enemy extends BaseActor implements Damageable {
         enemyLastSeenPosition = null;
         projectileCount = PROJECTILE_COUNT;
         projectileCooldown = 10;
-        collisionDamageCooldown = 0;
+        damageCooldown = 0;
 
         health = MAX_HEALTH;
 
@@ -58,52 +59,61 @@ public class Enemy extends BaseActor implements Damageable {
 
         smallProximitySensor = new BaseActor(0, 0, s);
         smallProximitySensor.setSize(200, 200);
-        smallProximitySensor.loadTexture("circle.png"); // TODO use assetmanager
-        smallProximitySensor.setColor(Color.GREEN);
-        smallProximitySensor.setOpacity(0.5f);
         smallProximitySensor.setVisible(false);
         smallProximitySensor.setBoundaryPolygon(10);
         smallProximitySensor.centerAtPosition(getOriginX(), getOriginY());
         addActor(smallProximitySensor);
 
         largeProximitySensor = new BaseActor(0, 0, s);
-        largeProximitySensor.loadTexture("circle.png"); // TODO use assetmanager
         largeProximitySensor.setSize(300, 300);
-        largeProximitySensor.setColor(Color.RED);
-        largeProximitySensor.setOpacity(0.5f);
         largeProximitySensor.setVisible(false);
         largeProximitySensor.setBoundaryPolygon(10);
         largeProximitySensor.centerAtPosition(getOriginX(), getOriginY());
         addActor(largeProximitySensor);
 
-        BaseActor healthBarFrame = new BaseActor(0, 0, s);
+        initializeHealthBar();
+    }
+
+    private void initializeHealthBar() {
+        BaseActor healthBarFrame = new BaseActor(0, 0, getStage());
         healthBarFrame.loadTexture(Assets.instance.getTexture(Assets.BLANK));
-        healthBarFrame.setSize(getWidth() * 0.75f, 30);
+        healthBarFrame.setSize(getWidth() * 0.75f, 14);
         healthBarFrame.setColor(Color.WHITE);
-        healthBar = new BaseActor(0, 0, s);
+        healthBar = new BaseActor(0, 0, getStage());
         healthBar.loadTexture(Assets.instance.getTexture(Assets.BLANK));
-        healthBarMaxWidth = getWidth() * 0.75f - 20;
-        healthBar.setSize(healthBarMaxWidth, 20);
+        healthBarMaxWidth = getWidth() * 0.75f - 4;
+        healthBar.setSize(healthBarMaxWidth, 10);
         healthBar.setColor(Color.RED);
         healthBarFrame.addActor(healthBar);
-        healthBar.setPosition(10, 10);
+        healthBar.setPosition(2, 2);
 
         addActor(healthBarFrame);
         healthBarFrame.setPosition(0, getHeight());
-
     }
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        collisionDamageCooldown -= delta;
+        if (getStage() == null) {
+            return;
+        }
+        damageCooldown -= delta;
         projectileCooldown -= delta;
 
+        if (projectileCooldown <= 0 && projectileCount > 0 && seesSubmarine) {
+            shootProjectile();
+        }
 
+        queueNextAction();
 
-        shootProjectile();
-        evasiveActionIfSensorOverlapsEnvironment();
+        float angle = getNextMoveAngle();
+        accelerateAtAngle(angle);
+        applyPhysics(delta);
+        updateHealthBar();
+        removeIfTooFarFromSubmarine();
+    }
 
+    private float getNextMoveAngle() {
         float angle = 0;
         try {
             angle = targetPositionQueue.removeFirst().angle();
@@ -114,27 +124,36 @@ public class Enemy extends BaseActor implements Damageable {
                 angle = idlingPosition.cpy().sub(getX() + getOriginX(), getY() + getOriginY()).angle();
             }
         }
-        accelerateAtAngle(angle);
-        applyPhysics(delta);
+        return angle;
+    }
 
+    private void updateHealthBar() {
         healthBar.setSize(MathUtils.clamp(healthBarMaxWidth * health / MAX_HEALTH, 0, MAX_HEALTH), healthBar.getHeight());
     }
 
-    private void shootProjectile() { // TODO FIX TO SHOOT FROM CENTRE
-        if (projectileCooldown <= 0 && projectileCount > 0 && seesSubmarine) {
-            Projectile projectile = new Projectile(0, 0, enemyLastSeenPosition.cpy().sub(getX() + getOriginX(), getY() + getOriginY()).angle(), getStage());
-            projectileCooldown = PROJECTILE_COOLDOWN;
-            projectileCount--;
-            projectile.centerAtActor(this);
+    private void removeIfTooFarFromSubmarine() {
+        Submarine submarine = (Submarine) BaseActor.getList(getStage(), "szm.orde4c.game.entity.submarine.Submarine").get(0);
+        Vector2 submarineOrigin = new Vector2(submarine.getX() + submarine.getOriginX(), submarine.getY() + submarine.getOriginY());
+        Vector2 origin = new Vector2(getX() + getOriginX(), getY() + getOriginY());
+        if (submarineOrigin.cpy().sub(origin).len() > maximumDistanceFromSubmarineBeforeDeletion) {
+            addAction(Actions.removeActor());
         }
     }
 
-    private void evasiveActionIfSensorOverlapsEnvironment() {
+    private void shootProjectile() {
+        Projectile projectile = new Projectile(0, 0, enemyLastSeenPosition.cpy().sub(getX() + getOriginX(), getY() + getOriginY()).angle(), getStage());
+        projectileCooldown = PROJECTILE_COOLDOWN;
+        projectileCount--;
+        projectile.setPosition(getX() + getOriginX(), getY() + getOriginY());
+    }
+
+    private void queueNextAction() {
         seesSubmarine = true;
 
         Submarine submarine = (Submarine) BaseActor.getList(getStage(), "szm.orde4c.game.entity.submarine.Submarine").get(0);
         Vector2 submarineOrigin = new Vector2(submarine.getX() + submarine.getOriginX(), submarine.getY() + submarine.getOriginY());
         Vector2 origin = new Vector2(getX() + getOriginX(), getY() + getOriginY());
+        setRotation((submarineOrigin.cpy().sub(origin)).angle());
 
         Polygon submarineProximitySensorPolygon = getLargeProximitySensorBoundaryPolygon();
         Polygon submarineBoundaryPolygon = BaseActor.getList(getStage(), "szm.orde4c.game.entity.submarine.Submarine").get(0).getBoundaryPolygon();
@@ -148,12 +167,12 @@ public class Enemy extends BaseActor implements Damageable {
         int overlapCount = 0;
         Vector2 vectorSum = new Vector2(0, 0);
         List<BaseActor> collisionActors = BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Environment");
-        collisionActors.addAll(BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Rock"));
-        collisionActors.addAll(BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Vegetation"));
-        List<BaseActor> otherFish = BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Vegetation");
-        otherFish.remove(this);
-        collisionActors.addAll(otherFish);
+        List<BaseActor> damageableActors = BaseActor.getList(getStage(), "szm.orde4c.game.entity.Damageable");
+        collisionActors.addAll(damageableActors);
         for (BaseActor environmentActor : collisionActors) {
+            if (environmentActor instanceof Submarine || environmentActor.equals(this)) {
+                continue;
+            }
             Polygon poly1 = getSmallProximitySensorBoundaryPolygon();
             Polygon poly2 = environmentActor.getBoundaryPolygon();
 
@@ -175,10 +194,6 @@ public class Enemy extends BaseActor implements Damageable {
         }
         if (seesSubmarine) {
             enemyLastSeenPosition = submarineOrigin;
-        }
-
-        if (submarineOrigin.cpy().sub(origin).len() > maximumDistanceFromSubmarineBeforeDeletion) {
-            remove();
         }
     }
 
@@ -210,7 +225,10 @@ public class Enemy extends BaseActor implements Damageable {
 
     @Override
     public void damage(float damage) {
-        health -= damage;
+        if (damageCooldown <= 0) {
+            health -= damage;
+            damageCooldown = MAX_DAMAGE_COOLDOWN;
+        }
     }
 
     @Override

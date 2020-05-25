@@ -10,15 +10,15 @@ public class Projectile extends BaseActor {
         super(x, y, s);
         loadTexture(Assets.instance.getTexture(Assets.BLANK_CIRCLE));
         setSize(25, 25);
+        setOrigin(getWidth() / 2f, getHeight() / 2f);
         setBoundaryPolygon(10);
         setColor(Color.TAN);
 
         setAcceleration(0);
         setDeceleration(0);
         setSpeed(125);
-
-        setRotation(angle);
         velocityVector.rotate(angle);
+        setRotation(angle);
     }
 
     @Override
