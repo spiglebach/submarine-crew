@@ -196,7 +196,7 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
                 bump(bodyCollisionOffset);
                 if (collisionActor instanceof Enemy) {
                     Enemy enemyActor = (Enemy) collisionActor;
-                    enemyActor.damage(50 * delta); // TODO MAYBE NOT OGOD
+                    enemyActor.damage(20);
                 }
             }
             for (BaseActor armActor : BaseActor.getList(this, "szm.orde4c.game.entity.submarine.Arm")) {
@@ -213,7 +213,7 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
                 if (collisionActor instanceof Damageable) {
                     if (arm.overlaps(collisionActor)) {
                         Damageable damageableActor = (Damageable) collisionActor;
-                        damageableActor.damage(delta * 10); // TODO MAYBE NOT OGOD
+                        damageableActor.damage(20);
                     }
                 }
             }
