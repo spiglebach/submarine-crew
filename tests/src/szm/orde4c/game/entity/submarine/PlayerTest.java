@@ -1,6 +1,7 @@
 package szm.orde4c.game.entity.submarine;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import szm.orde4c.game.GdxTestRunner;
 import szm.orde4c.game.base.BaseActor;
+import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
 
@@ -30,6 +32,7 @@ public class PlayerTest {
 
     @Before
     public void setup() {
+        Assets.instance.loadAsset(Assets.PLAYER_ANIMATIONS, Texture.class);
         stage = new Stage(new StretchViewport(1000, 1000), mock(SpriteBatch.class));
         ladder = new Ladder(0, 0, 100, 200, stage);
         station = new EngineStation(0, 0, 100, 100, mock(Submarine.class), stage);

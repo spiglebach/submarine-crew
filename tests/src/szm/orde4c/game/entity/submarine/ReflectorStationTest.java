@@ -25,6 +25,9 @@ public class ReflectorStationTest {
         Assets.instance.loadAsset(Assets.SUBMARINE_IMAGE, Texture.class);
         Assets.instance.loadAsset(Assets.SUBMARINE_REFLECTOR_LIGHT_INACTIVE, Texture.class);
         Assets.instance.loadAsset(Assets.SUBMARINE_REFLECTOR_LIGHT_ACTIVE, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_CUTTER, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_DRILL, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_ELEVATOR, Texture.class);
         stage = new Stage(new StretchViewport(1000, 1000), mock(SpriteBatch.class));
         submarine = new Submarine(0, 0, stage);
         station = new ReflectorStation(0, 0, 100, 100, submarine, stage);

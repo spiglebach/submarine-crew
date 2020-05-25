@@ -37,6 +37,9 @@ public class SubmarineTest {
         stage = new Stage(new StretchViewport(1000, 1000), mock(SpriteBatch.class));
         tileMapActor = new TileMapActor("submarine/submarine.tmx");
         Assets.instance.loadAsset(Assets.SUBMARINE_IMAGE, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_DRILL, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_CUTTER, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_ELEVATOR, Texture.class);
         submarine = new Submarine(0, 0, stage);
         playerInfo = new PlayerInfo(Color.BLACK, ControlType.CONTROLLER, null);
         otherActor = new BaseActor(0, 0, stage);

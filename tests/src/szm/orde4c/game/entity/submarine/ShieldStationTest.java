@@ -26,6 +26,7 @@ public class ShieldStationTest {
         Assets.instance.loadAsset(Assets.SUBMARINE_IMAGE, Texture.class);
         Assets.instance.loadAsset(Assets.SUBMARINE_REFLECTOR_LIGHT_INACTIVE, Texture.class);
         Assets.instance.loadAsset(Assets.SUBMARINE_REFLECTOR_LIGHT_ACTIVE, Texture.class);
+        Assets.instance.loadAsset(Assets.SUBMARINE_ELEVATOR, Texture.class);
         stage = new Stage(new StretchViewport(1000, 1000), mock(SpriteBatch.class));
         submarine = new Submarine(0, 0, stage);
         station = new ShieldStation(0, 0, 100, 100, submarine, stage);
