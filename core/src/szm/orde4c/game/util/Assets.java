@@ -34,17 +34,19 @@ public class Assets implements Disposable {
     public static final String SUBMARINE_REFLECTOR_LIGHT_INACTIVE = "submarine/reflector-light-inactive.png";
     public static final String SUBMARINE_IMAGE = "submarine/submarine.png";
     public static final String SUBMARINE_TORPEDO = "submarine/torpedo.png";
+    public static final String SUBMARINE_DRILL = "submarine/tool_drill.png";
+    public static final String SUBMARINE_CUTTER = "submarine/tool_cutter.png";
+    public static final String SUBMARINE_CONTROLS = "submarine/controls.jpg";
 
 
+    public static final String LEVEL_GOAL_INDICATOR = "level/goal_indicator.png";
+    public static final String LEVEL_GOAL_INDICATOR_ARROW = "level/goal_indicator_arrow.png";
     public static final String LEVEL_SELECTOR_MAPSIGN_LOCKED = "level/mapsign_locked.png";
     public static final String LEVEL_SELECTOR_MAPSIGN_NEXT = "level/mapsign_next.png";
     public static final String LEVEL_SELECTOR_MAPSIGN_COMPLETE = "level/mapsign_complete.png";
     public static final String LEVEL_SELECTOR_CURSOR = "level/level-selector-cursor.png";
     public static final String LEVEL_SELECTOR_IMAGE = "level/level-selector.png";
     public static final String LEVEL_SELECTOR_TMX = "level/level-selector.tmx";
-    public static final String LEVEL_GEYSER_0 = "level/geyser_0.png";
-    public static final String LEVEL_GEYSER_1 = "level/geyser_1.png";
-    public static final String LEVEL_GEYSER_2 = "level/geyser_2.png";
     public static final String LEVEL_ROCK_0 = "level/rock_0.png";
     public static final String LEVEL_ROCK_1 = "level/rock_1.png";
     public static final String LEVEL_ROCK_2 = "level/rock_2.png";
@@ -57,20 +59,15 @@ public class Assets implements Disposable {
     public static final String LEVEL_VEGETATION_5 = "level/vegetation_5.png";
 
     public static final String LEVEL1_MAP_FILE = "level/level1/level1.tmx";
-    public static final String LEVEL1_MAP_BACKGROUND = "level/level1/level1background.jpg";
-    public static final String LEVEL1_MAP_FOREGROUND = "level/level1/level1foreground.png";
+    public static final String LEVEL1_MAP_IMAGE = "level/level1/level1.jpg";
     public static final String LEVEL2_MAP_FILE = "level/level2/level2.tmx";
-    public static final String LEVEL2_MAP_BACKGROUND = "level/level2/level2background.jpg";
-    public static final String LEVEL2_MAP_FOREGROUND = "level/level2/level2foreground.png";
+    public static final String LEVEL2_MAP_IMAGE = "level/level2/level2.jpg";
     public static final String LEVEL3_MAP_FILE = "level/level3/level3.tmx";
-    public static final String LEVEL3_MAP_BACKGROUND = "level/level3/level3background.jpg";
-    public static final String LEVEL3_MAP_FOREGROUND = "level/level3/level3foreground.png";
+    public static final String LEVEL3_MAP_IMAGE = "level/level3/level3.jpg";
     public static final String LEVEL4_MAP_FILE = "level/level4/level4.tmx";
-    public static final String LEVEL4_MAP_BACKGROUND = "level/level4/level4background.jpg";
-    public static final String LEVEL4_MAP_FOREGROUND = "level/level4/level4foreground.png";
+    public static final String LEVEL4_MAP_IMAGE = "level/level4/level4.jpg";
     public static final String LEVEL5_MAP_FILE = "level/level5/level5.tmx";
-    public static final String LEVEL5_MAP_BACKGROUND = "level/level5/level5background.jpg";
-    public static final String LEVEL5_MAP_FOREGROUND = "level/level5/level5foreground.png";
+    public static final String LEVEL5_MAP_IMAGE = "level/level5/level5.jpg";
 
     public static final String BUTTON_CONTROLLER_FACE_BLANK = "button/controller_face_blank.png";
     public static final String BUTTON_CONTROLLER_FACE_EAST = "button/controller_face_east.png";
@@ -139,20 +136,17 @@ public class Assets implements Disposable {
         manager.load(BLANK_CIRCLE, Texture.class);
         manager.load(SAVE_SLOT, Texture.class);
         manager.load(MENU_SCREEN, Texture.class);
-        manager.load("exit_sign.png", Texture.class);
-        manager.load("exit_sign_arrow.png", Texture.class);
     }
 
     private void loadLevelAssets() {
+        manager.load(LEVEL_GOAL_INDICATOR, Texture.class);
+        manager.load(LEVEL_GOAL_INDICATOR_ARROW, Texture.class);
         manager.load(LEVEL_SELECTOR_CURSOR, Texture.class);
         manager.load(LEVEL_SELECTOR_MAPSIGN_LOCKED, Texture.class);
         manager.load(LEVEL_SELECTOR_MAPSIGN_COMPLETE, Texture.class);
         manager.load(LEVEL_SELECTOR_MAPSIGN_NEXT, Texture.class);
         manager.load(LEVEL_SELECTOR_IMAGE, Texture.class);
         manager.load(LEVEL_SELECTOR_TMX, TiledMap.class);
-        manager.load(LEVEL_GEYSER_0, Texture.class);
-        manager.load(LEVEL_GEYSER_1, Texture.class);
-        manager.load(LEVEL_GEYSER_2, Texture.class);
         manager.load(LEVEL_ROCK_0, Texture.class);
         manager.load(LEVEL_ROCK_1, Texture.class);
         manager.load(LEVEL_ROCK_2, Texture.class);
@@ -165,24 +159,15 @@ public class Assets implements Disposable {
         manager.load(LEVEL_VEGETATION_5, Texture.class);
 
         manager.load(LEVEL1_MAP_FILE, TiledMap.class);
-        manager.load(LEVEL1_MAP_BACKGROUND, Texture.class);
-        manager.load(LEVEL1_MAP_FOREGROUND, Texture.class);
-        // assets/level/level2
-        /*manager.load(LEVEL2_MAP_FILE, TiledMap.class);
-        manager.load(LEVEL2_MAP_BACKGROUND, Texture.class);
-        manager.load(LEVEL2_MAP_FOREGROUND, Texture.class);
-        // assets/level/level3
+        manager.load(LEVEL1_MAP_IMAGE, Texture.class);
+        manager.load(LEVEL2_MAP_FILE, TiledMap.class);
+        manager.load(LEVEL2_MAP_IMAGE, Texture.class);
         manager.load(LEVEL3_MAP_FILE, TiledMap.class);
-        manager.load(LEVEL3_MAP_BACKGROUND, Texture.class);
-        manager.load(LEVEL3_MAP_FOREGROUND, Texture.class);
-        // assets/level/level4
+        manager.load(LEVEL3_MAP_IMAGE, Texture.class);
         manager.load(LEVEL4_MAP_FILE, TiledMap.class);
-        manager.load(LEVEL4_MAP_BACKGROUND, Texture.class);
-        manager.load(LEVEL4_MAP_FOREGROUND, Texture.class);
-        // assets/level/level5
+        manager.load(LEVEL4_MAP_IMAGE, Texture.class);
         manager.load(LEVEL5_MAP_FILE, TiledMap.class);
-        manager.load(LEVEL5_MAP_BACKGROUND, Texture.class);
-        manager.load(LEVEL5_MAP_FOREGROUND, Texture.class);*/
+        manager.load(LEVEL5_MAP_IMAGE, Texture.class);
     }
 
     private void loadSubmarineAssets() {
@@ -191,6 +176,9 @@ public class Assets implements Disposable {
         manager.load(SUBMARINE_REFLECTOR_LIGHT_INACTIVE, Texture.class);
         manager.load(SUBMARINE_IMAGE, Texture.class);
         manager.load(SUBMARINE_TORPEDO, Texture.class);
+        manager.load(SUBMARINE_CUTTER, Texture.class);
+        manager.load(SUBMARINE_DRILL, Texture.class);
+        manager.load(SUBMARINE_CONTROLS, Texture.class);
     }
 
     private void loadButtonAssets() {
