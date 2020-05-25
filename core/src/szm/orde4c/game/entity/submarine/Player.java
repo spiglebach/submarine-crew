@@ -2,7 +2,6 @@ package szm.orde4c.game.entity.submarine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
+import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
 
@@ -45,7 +45,7 @@ public class Player extends BaseActor implements ControllerListener, InputProces
     public Player(float x, float y, PlayerInfo info, Submarine submarine, Stage s) {
         super(x, y, s);
         this.submarine = submarine;
-        animationMoving = loadAnimationFromSheet("player/player.png", 1, 4, 0.1f, true);
+        animationMoving = loadAnimationFromSheet(Assets.instance.getTexture(Assets.PLAYER_ANIMATIONS), 1, 4, 0.1f, true);
         setSize(18, 23);
         setBoundaryRectangle();
 
@@ -73,8 +73,11 @@ public class Player extends BaseActor implements ControllerListener, InputProces
     public void act(float delta) {
         super.act(delta);
         if (station != null) {
+            setAnimationPaused(true);
             station.operate();
             return;
+        } else {
+            setAnimationPaused(false);
         }
 
         boolean moved = false;
@@ -181,9 +184,6 @@ public class Player extends BaseActor implements ControllerListener, InputProces
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            return false;
-        }
         if (isOperatingStation()) {
             if (keycode == Input.Keys.F) {
                 station.setOperatingPlayer(null);
