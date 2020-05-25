@@ -26,8 +26,15 @@ public class AttributeBar extends BaseActor {
         super(0, 0, s);
         loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setSize(BAR_WIDTH + 2 * FRAME_PADDING, BAR_HEIGHT + 2 * FRAME_PADDING);
+        setColor(Color.LIGHT_GRAY);
         this.text = text;
         this.attributePercentFunction = attributePercentFunction;
+
+        BaseActor baseBar = new BaseActor(0, 0, s);
+        baseBar.loadTexture(Assets.instance.getTexture(Assets.BLANK));
+        baseBar.setSize(BAR_WIDTH, BAR_HEIGHT);
+        baseBar.centerAtActor(this);
+        addActor(baseBar);
 
         bar = new BaseActor(0, 0, s);
         bar.loadTexture(Assets.instance.getTexture(Assets.BLANK));
@@ -39,9 +46,9 @@ public class AttributeBar extends BaseActor {
         for (int i = 1; i < segments; i++) {
             BaseActor barSeparator = new BaseActor(0, 0, s);
             barSeparator.loadTexture(Assets.instance.getTexture(Assets.BLANK));
-            barSeparator.setSize(FRAME_PADDING / 2.0f, getHeight());
-            barSeparator.setColor(Color.BLACK);
-            barSeparator.setPosition(FRAME_PADDING + BAR_WIDTH / segments * i, 0);
+            barSeparator.setSize(FRAME_PADDING * 2, getHeight());
+            barSeparator.setPosition(FRAME_PADDING / 4f + BAR_WIDTH / segments * i, 0);
+            barSeparator.setColor(Color.LIGHT_GRAY);
             addActor(barSeparator);
         }
 
@@ -49,6 +56,7 @@ public class AttributeBar extends BaseActor {
         layoutTable.setFillParent(true);
         attributePercentLabel = new Label(text + "100%", BaseGame.labelStyle);
         attributePercentLabel.setFontScale(0.4f);
+        attributePercentLabel.setColor(Color.BLACK);
         layoutTable.add(attributePercentLabel).expand();
         addActor(layoutTable);
     }
