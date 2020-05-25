@@ -40,14 +40,14 @@ public class LoadingScreen extends BaseScreen {
         loadingBar.setColor(Color.NAVY);
 
         currentStateLabel = new Label("Töltés...", BaseGame.labelStyle);
-        currentStateLabel.setColor(Color.RED);
+        currentStateLabel.setColor(Color.CYAN);
 
         Table stateCountTable = new Table();
         stateCountTable.setPosition(innerFrame.getX(), innerFrame.getY());
         stateCountTable.setSize(innerFrame.getWidth(), innerFrame.getHeight());
         stateCountLabel = new Label(String.format("%d / %d", Assets.instance.getStateIndex(), Assets.instance.getStateCount()), BaseGame.labelStyle);
         stateCountTable.add(stateCountLabel).expand();
-        stateCountLabel.setColor(Color.RED);
+        stateCountLabel.setColor(Color.CYAN);
 
         frame.addActor(innerFrame);
         frame.addActor(loadingBar);
