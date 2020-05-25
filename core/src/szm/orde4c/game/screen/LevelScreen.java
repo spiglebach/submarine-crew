@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import szm.orde4c.game.base.*;
+import szm.orde4c.game.effect.GeyserBubblingEffect;
 import szm.orde4c.game.entity.*;
 import szm.orde4c.game.entity.stationary.Area;
 import szm.orde4c.game.entity.stationary.Environment;
@@ -48,6 +49,7 @@ public class LevelScreen extends BaseGamepadScreen {
     private List<AttributeBar> attributeBars;
 
     private BaseActor goal;
+    private BaseActor goalIndicator;
     private TextDisplayScreen levelCompleteScreen;
     private TextDisplayScreen defeatScreen;
 
@@ -82,38 +84,75 @@ public class LevelScreen extends BaseGamepadScreen {
         String currentLevelName = String.format("level%d", currentLevelIndex);
         TileMapActor tileMapActor = new TileMapActor(String.format("level/%s/%s%s", currentLevelName, currentLevelName, ".tmx"));
         BaseActor mapBackground = new BaseActor(0, 0, mainStage);
-        mapBackground.loadTexture(Assets.instance.getTexture(String.format("level/%s/%s%s", currentLevelName, currentLevelName, "background.jpg")));
+        mapBackground.loadTexture(Assets.instance.getTexture(String.format("level/%s/%s%s", currentLevelName, currentLevelName, ".jpg")));
         BaseActor.setWorldBounds(mapBackground);
 
         loadLevelEnvironments(tileMapActor);
         loadLevelAreas(tileMapActor);
         loadSubmarineStart(tileMapActor);
         loadLevelGoal(tileMapActor);
+        loadLevelGeyserBubblingEffects(tileMapActor);
         loadLevelGeysers(tileMapActor);
         loadLevelEnemySpawnPositions(tileMapActor);
 
-        BaseActor mapForeground = new BaseActor(0, 0, mainStage);
-        mapForeground.loadTexture(Assets.instance.getTexture(String.format("level/%s/%s%s", currentLevelName, currentLevelName, "foreground.png")));
     }
 
     private void initializeUI() {
-        attributeBars = new ArrayList<>();
-        attributeBars.add(new AttributeBar(1, "Élet: ", Color.RED, Submarine::getHealthPercent, uiStage));
-        attributeBars.add(new AttributeBar(3, "Pajzs: ", Color.CYAN, Submarine::getShieldPercent, uiStage));
-        attributeBars.add(new AttributeBar(1, "Energia: ", Color.BLUE, Submarine::getEnergyPercent, uiStage));
+        initializeAttributeBars();
+        initializeGoalIndicator();
+        initializePauseMenu();
+    }
 
-        uiTable.pad(5);
+    private void initializeAttributeBars() {
+        attributeBars = new ArrayList<>();
+        attributeBars.add(new AttributeBar(1, "Élet: ", Color.SALMON, Submarine::getHealthPercent, uiStage));
+        attributeBars.add(new AttributeBar(3, "Pajzs: ", Color.CYAN, Submarine::getShieldPercent, uiStage));
+        attributeBars.add(new AttributeBar(1, "Energia: ", Color.ROYAL, Submarine::getEnergyPercent, uiStage));
+
+        uiTable.pad(20);
         for (AttributeBar attributeBar : attributeBars.subList(0, 2)) {
-            uiTable.add(attributeBar).expandX().left().top().pad(2);
+            uiTable.add(attributeBar).expandX().left().top().pad(10);
             uiTable.row();
         }
-        uiTable.add(attributeBars.get(2)).expand().top().left().pad(2);
+        uiTable.add(attributeBars.get(2)).expandX().left().pad(10);
+    }
 
+    private void initializeGoalIndicator() {
+        BaseActor goalIndicatorGroup = new BaseActor(0, 0, uiStage);
+        goalIndicatorGroup.setSize(100, 100);
+
+        goalIndicator = new BaseActor(0, 0, uiStage);
+        goalIndicator.loadTexture(Assets.instance.getTexture(Assets.LEVEL_GOAL_INDICATOR_ARROW));
+        goalIndicator.setSize(100, 100);
+        goalIndicator.setOrigin(goalIndicator.getWidth() / 2f, goalIndicator.getHeight() / 2f);
+        goalIndicator.centerAtActor(goalIndicatorGroup);
+
+        BaseActor goalIndicatorCenter = new BaseActor(0, 0, uiStage);
+        goalIndicatorCenter.loadTexture(Assets.instance.getTexture(Assets.LEVEL_GOAL_INDICATOR));
+        goalIndicatorCenter.setSize(100, 100);
+        goalIndicatorCenter.centerAtActor(goalIndicatorGroup);
+
+        goalIndicatorGroup.addActor(goalIndicator);
+        goalIndicatorGroup.addActor(goalIndicatorCenter);
+        uiTable.row();
+        uiTable.add(goalIndicatorGroup).expand().top().left();
+        updateGoalIndicator();
+    }
+
+    private void initializePauseMenu() {
         ArrayList<MenuLabel> menuOptions = new ArrayList<>();
-        MenuLabel loadGame = new MenuLabel("Kilépés a menübe", BaseGame.labelStyle) {
+        MenuLabel resumeGame = new MenuLabel("Játék folytatása", BaseGame.labelStyle) {
             @Override
             public void execute() {
-                submarine.levelFinished();
+                resumeGame();
+            }
+        };
+        menuOptions.add(resumeGame);
+
+        MenuLabel loadGame = new MenuLabel("Kilépés a főmenübe", BaseGame.labelStyle) {
+            @Override
+            public void execute() {
+                levelFinished();
                 BaseGame.setActiveScreen(new MainMenuScreen());
             }
         };
@@ -127,7 +166,7 @@ public class LevelScreen extends BaseGamepadScreen {
         };
         menuOptions.add(exit);
 
-        pauseMenu = new PauseMenu(menuOptions, Assets.BLANK, 0.5f, uiStage);
+        pauseMenu = new PauseMenu(menuOptions, Assets.SUBMARINE_CONTROLS, 1f, uiStage);
         pauseMenu.setVisible(false);
     }
 
@@ -135,12 +174,20 @@ public class LevelScreen extends BaseGamepadScreen {
         for (AttributeBar attributeBar : attributeBars) {
             attributeBar.update(submarine);
         }
+        updateGoalIndicator();
+    }
+
+    private void updateGoalIndicator() {
+        Vector2 submarineOrigin = submarine.getPosition().cpy().add(submarine.getOriginX(), submarine.getOriginY());
+        Vector2 goalOrigin = goal.getPosition().cpy().add(goal.getOriginX(), goal.getOriginY());
+        goalIndicator.setRotation(goalOrigin.sub(submarineOrigin).angle());
     }
 
     @Override
     public void render(float dt) {
         if (!paused) {
             mainStage.act(dt);
+            submarine.toFront();
         }
         uiStage.act(dt);
 
@@ -157,117 +204,98 @@ public class LevelScreen extends BaseGamepadScreen {
     @Override
     public void update(float dt) {
 
-        if (paused || submarine.getStage() == null) {
+        if (paused) {
             return;
         }
 
-        for (BaseActor torpedoActor : BaseActor.getList(mainStage, "szm.orde4c.game.entity.Torpedo")) {
-            if (((new Vector2(torpedoActor.getX(), torpedoActor.getY())).sub(submarine.getX() + submarine.getOriginX(), submarine.getY() + submarine.getOriginY())).len() > mainStage.getWidth() * 2) {
-                torpedoActor.remove();
-                continue;
-            }
-            List<BaseActor> actors = BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Environment");
-            actors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable"));
-            for (BaseActor environmentActor : actors) {
-                if (torpedoActor.overlaps(environmentActor)) {
+        processEnemies(dt);
+        processProjectileCollision();
 
-                    BaseActor explosion = new BaseActor(0, 0, mainStage);
-                    explosion.setSize(300, 300);
-                    explosion.setBoundaryPolygon(10);
-                    explosion.setVisible(false);
-                    Vector2 rotatedTorpedoEnd = new Vector2(torpedoActor.getWidth(), torpedoActor.getHeight() / 2.0f).rotate(torpedoActor.getRotation());
-                    explosion.centerAtPosition(torpedoActor.getX() + rotatedTorpedoEnd.x, torpedoActor.getY() + rotatedTorpedoEnd.y);
-                    torpedoActor.remove();
+        removeDestroyedActorsExceptSubmarine();
 
-                    for (BaseActor otherEnvironmentActor : BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable")) {
-                        if (explosion.overlaps(otherEnvironmentActor)) {
-                            otherEnvironmentActor.remove();
-                        }
-                    }
+        checkLevelCompletion();
+        checkLevelLoss();
 
-                    if (submarine.overlaps(explosion)) {
-                        submarine.damage(20);
-                    }
-                }
-            }
-        }
         submarine.boundToWorld();
         submarine.alignCamera();
-
         updateUI();
+    }
 
-        for (BaseActor actor : BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable")) {
-            if (((Damageable) actor).isDestroyed()) {
-                if (!(actor instanceof Submarine)) {
-                    actor.remove();
-                }
-            }
+    public void levelComplete() {
+        if (currentSave.getCompletedLevels() < currentLevelIndex) {
+            currentSave.setCompletedLevels(currentLevelIndex);
+            SaveGameService.save(currentSave);
         }
+        levelCompleteScreen.setVisible(true);
+        levelFinished();
+    }
 
+    private void levelLost() {
+        defeatScreen.setVisible(true);
+        levelFinished();
+    }
+
+    private void levelFinished() {
+        submarine.addAction(Actions.delay(2f));
+        submarine.addAction(Actions.after(new Action() {
+            @Override
+            public boolean act(float delta) {
+                submarine.levelFinished();
+                BaseGame.setActiveScreen(new LoadGameScreen());
+                mainStage.addAction(Actions.removeActor());
+                return true;
+            }
+        }));
+    }
+
+    private void checkLevelCompletion() {
         if (submarine.overlaps(goal)) {
             levelComplete();
         }
+    }
 
-
-        for (BaseActor projectileActor : BaseActor.getList(mainStage, "szm.orde4c.game.entity.Projectile")) {
-            for (BaseActor armActor : BaseActor.getList(submarine, "szm.orde4c.game.entity.submarine.Arm")) {
-                if (armActor.overlaps(projectileActor)) {
-                    projectileActor.remove();
-                    break;
-                }
-            }
-            if (projectileActor.getStage() == null) {
-                continue;
-            }
-            if (projectileActor.overlaps(submarine)) {
-                submarine.damage(10);
-                projectileActor.remove();
-                continue;
-            }
-            List<BaseActor> collisionActors = BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Environment");
-            collisionActors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Rock"));
-            collisionActors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Vegetation"));
-            for (BaseActor environmentActor : collisionActors) {
-                if (environmentActor.overlaps(projectileActor)) {
-                    projectileActor.remove();
-                    break;
-                }
-            }
-        }
-
-        processEnemies(dt);
-
+    private void checkLevelLoss() {
         if (submarine.isDestroyed() || submarine.getEnergy() <= 0) {
             levelLost();
         }
     }
 
-    public void levelComplete() {
-        currentSave.setCompletedLevels(currentLevelIndex);
-        SaveGameService.save(currentSave);
-        levelCompleteScreen.setVisible(true);
-        submarine.addAction(Actions.delay(2f));
-        submarine.addAction(Actions.after(new Action() {
-            @Override
-            public boolean act(float delta) {
-                submarine.levelFinished();
-                BaseGame.setActiveScreen(new LoadGameScreen());
-                return true;
+    private void removeDestroyedActorsExceptSubmarine() {
+        for (BaseActor actor : BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable")) {
+            if (((Damageable) actor).isDestroyed()) {
+                if (!(actor instanceof Submarine)) {
+                    actor.addAction(Actions.removeActor());
+                }
             }
-        }));
+        }
     }
 
-    private void levelLost() {
-        defeatScreen.setVisible(true);
-        submarine.addAction(Actions.delay(2f));
-        submarine.addAction(Actions.after(new Action() {
-            @Override
-            public boolean act(float delta) {
-                submarine.levelFinished();
-                BaseGame.setActiveScreen(new LoadGameScreen());
-                return true;
+    private void processProjectileCollision() {
+        List<BaseActor> projectileList = BaseActor.getList(mainStage, "szm.orde4c.game.entity.Torpedo");
+        projectileList.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.Projectile"));
+        for (BaseActor projectileActor : projectileList) {
+            if (((projectileActor.getPosition().cpy()).sub(submarine.getPosition().cpy())).len() > mainStage.getWidth() * 2) {
+                projectileActor.addAction(Actions.removeActor());
+                continue;
             }
-        }));
+
+            List<BaseActor> collisionActors = BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Environment");
+            collisionActors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable"));
+            for (BaseActor collisionActor : collisionActors) {
+                if (projectileActor.overlaps(collisionActor)) {
+                    if (projectileActor instanceof Torpedo && !(collisionActor instanceof Submarine)) {
+                        ((Torpedo) projectileActor).explode();
+                        break;
+                    } else if (projectileActor instanceof Projectile) {
+                        if (collisionActor instanceof Damageable && !(collisionActor instanceof Enemy)) {
+                            ((Damageable) collisionActor).damage(10);
+                            projectileActor.addAction(Actions.removeActor());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void processEnemies(float delta) {
@@ -276,7 +304,7 @@ public class LevelScreen extends BaseGamepadScreen {
             for (Vector2 position : possibleEnemySpawns) {
                 Vector2 cameraPosition = new Vector2(mainStage.getCamera().position.x, mainStage.getCamera().position.y);
                 Vector2 camerPositionToSpawnPosition = position.cpy().sub(cameraPosition);
-                if (camerPositionToSpawnPosition.len() > mainStage.getCamera().viewportWidth / 2f + 200 && camerPositionToSpawnPosition.len() < mainStage.getWidth()) {
+                if (camerPositionToSpawnPosition.len() > mainStage.getCamera().viewportWidth / 2f + 200 && camerPositionToSpawnPosition.len() < mainStage.getWidth() * 2f) {
                     Enemy enemy = new Enemy(0, 0, mainStage);
                     enemy.centerAtPosition(position.x, position.y);
                     enemySpawnCooldown = ENEMY_SPAWN_COOLDOWN;
@@ -335,6 +363,18 @@ public class LevelScreen extends BaseGamepadScreen {
         goal.setVisible(false);
     }
 
+    private void loadLevelGeyserBubblingEffects(TileMapActor tileMapActor) {
+        for (MapObject geyserEffectObject : tileMapActor.getRectangleList("GeyserEffect")) {
+            MapProperties geyserEffectProperties = geyserEffectObject.getProperties();
+            float geyserEffectX = (float) geyserEffectProperties.get("x");
+            float geyserEffectY = (float) geyserEffectProperties.get("y");
+            float geyserEffectWidth = (float) geyserEffectProperties.get("width");
+            GeyserBubblingEffect effect = new GeyserBubblingEffect();
+            effect.setPosition(geyserEffectX, geyserEffectY);
+            mainStage.addActor(effect);
+        }
+    }
+
     private void loadLevelGeysers(TileMapActor tileMapActor) {
         for (MapObject geyserObject : tileMapActor.getRectangleList("Geyser")) {
             MapProperties geyserProperties = geyserObject.getProperties();
@@ -348,7 +388,7 @@ public class LevelScreen extends BaseGamepadScreen {
 
     private void loadLevelEnemySpawnPositions(TileMapActor tileMapActor) {
         possibleEnemySpawns = new ArrayList<>();
-        for(MapObject enemySpawnObject : tileMapActor.getRectangleList("EnemySpawn")) {
+        for (MapObject enemySpawnObject : tileMapActor.getRectangleList("EnemySpawn")) {
             MapProperties enemySpawnProperties = enemySpawnObject.getProperties();
             float enemySpawnX = (float) enemySpawnProperties.get("x");
             float enemySpawnY = (float) enemySpawnProperties.get("y");
