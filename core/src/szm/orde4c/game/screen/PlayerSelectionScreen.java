@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class PlayerSelectionScreen extends BaseGamepadScreen {
     private final int MAX_PLAYER_COUNT = 4;
     private ArrayList<PlayerSelectionSlot> slots;
-    private ControlDisplay controlDisplay;
     private CountdownDisplay countdownDisplay;
 
     private Save save;
@@ -81,9 +80,6 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ESCAPE) {
-            Gdx.app.exit(); // TODO remove vagy integrálni
-        }
         if (keycode == Input.Keys.E) {
             PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
             if (unoccupiedSlot != null) {
