@@ -73,7 +73,6 @@ public abstract class RandomizedAreaObject extends BaseActor implements Damageab
         if (!area.overlaps(other)) {
             return false;
         }
-
         return Intersector.overlapConvexPolygons(getBoundaryPolygon(), other.getBoundaryPolygon());
     }
 

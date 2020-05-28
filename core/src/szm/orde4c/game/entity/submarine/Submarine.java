@@ -136,13 +136,15 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
         super.act(delta);
 
         processPlayerCollisions();
-        processSubmarineCollisions(delta);
+        processSubmarineCollisions();
         ifPlayerIsAloneThenOperateArmStations();
         ifSubmarineOverlapsGeyserThenRechargeEnergy(delta);
         applyStationContiniousEnergyConsumption(delta);
 
         applyPhysics(delta);
         applyRotation(delta);
+
+        boundToWorld();
         alignCamera();
     }
 
@@ -183,7 +185,7 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
         }
     }
 
-    private void processSubmarineCollisions(float delta) {
+    private void processSubmarineCollisions() {
         List<BaseActor> submarineCollisionActors = new ArrayList<>();
         submarineCollisionActors.addAll(BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Rock"));
         submarineCollisionActors.addAll(BaseActor.getList(getStage(), "szm.orde4c.game.entity.stationary.Environment"));
@@ -202,7 +204,7 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
             for (BaseActor armActor : BaseActor.getList(this, "szm.orde4c.game.entity.submarine.Arm")) {
                 Arm arm = (Arm) armActor;
                 Vector2 armCollisionOffset = arm.preventOverlap(collisionActor);
-                arm.ifArmIsNotOperatedThenProcessEnvironmentObjectWithSensorPolygon(collisionActor);
+                arm.processObjectWithSensorPolygon(collisionActor);
                 if (armCollisionOffset != null) {
                     if (Math.abs(armCollisionOffset.x) > Math.abs(armCollisionOffset.y)) {
                         stopMovementX();
@@ -443,7 +445,6 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
                 e.printStackTrace();
             }
         }
-
         loadSubmarinePlayerStartingPositions(tileMapActor);
     }
 
@@ -644,12 +645,11 @@ public class Submarine extends BaseActor implements InputProcessor, ControllerLi
         energy = MathUtils.clamp(energy - amount, 0, MAX_ENERGY);
     }
 
-
     private void addPlayerStartPosition(Vector2 position) {
         playerStartPositions.add(position);
     }
 
-    BaseActor getReflectorActor() {
+    public BaseActor getReflectorActor() {
         return reflectorActor;
     }
 

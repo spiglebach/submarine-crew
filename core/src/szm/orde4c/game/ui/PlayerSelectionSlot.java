@@ -119,7 +119,7 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
         }
     }
 
-    public void playerLeft() {
+    private void playerLeft() {
         if (controlType.equals(ControlType.KEYBOARD)) {
             InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
             im.removeProcessor(this);
@@ -140,19 +140,19 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
         frame.addAction(Actions.color(EMPTY_COLOR, 2f));
     }
 
-    public void playerLockedIn() {
+    private void playerLockedIn() {
         lockedIn = true;
         rightArrow.setVisible(false);
         leftArrow.setVisible(false);
     }
 
-    public void playerCancelled() {
+    private void playerCancelled() {
         lockedIn = false;
         rightArrow.setVisible(true);
         leftArrow.setVisible(true);
     }
 
-    public void switchColorRight() {
+    private void switchColorRight() {
         lastMove = 0;
         availableColors.addLast(color);
         color = availableColors.removeFirst();
@@ -162,7 +162,7 @@ public class PlayerSelectionSlot extends BaseActor implements ControllerListener
         rightArrow.click();
     }
 
-    public void switchColorLeft() {
+    private void switchColorLeft() {
         lastMove = 0;
         availableColors.addFirst(color);
         color = availableColors.removeLast();

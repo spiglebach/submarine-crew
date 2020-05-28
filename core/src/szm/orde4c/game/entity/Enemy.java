@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Enemy extends BaseActor implements Damageable {
     private float maximumDistanceFromSubmarineBeforeDeletion;
-    private final float MAX_DAMAGE_COOLDOWN = 1f;
+    private final float DAMAGE_COOLDOWN = 1f;
     private float damageCooldown;
     private final int MAX_HEALTH = 150;
 
@@ -227,7 +227,7 @@ public class Enemy extends BaseActor implements Damageable {
     public void damage(float damage) {
         if (damageCooldown <= 0) {
             health -= damage;
-            damageCooldown = MAX_DAMAGE_COOLDOWN;
+            damageCooldown = DAMAGE_COOLDOWN;
         }
     }
 

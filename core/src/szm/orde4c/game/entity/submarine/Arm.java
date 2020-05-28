@@ -343,7 +343,7 @@ public class Arm extends BaseActor {
         return Intersector.overlapConvexPolygons(poly1, poly2);
     }
 
-    public void ifArmIsNotOperatedThenProcessEnvironmentObjectWithSensorPolygon(BaseActor environmentActor) {
+    public void processObjectWithSensorPolygon(BaseActor environmentActor) {
         if (station.getOperatingPlayer() != null) {
             return;
         }

@@ -79,16 +79,6 @@ public class ReflectorStation extends Station {
     }
 
     @Override
-    protected void playerNowOperating() {
-
-    }
-
-    @Override
-    protected void playerNoLongerOperating() {
-
-    }
-
-    @Override
     public void continiousEnergyConsumption(float delta) {
         if (activated && submarine.getEnergyPercent() >= 0.2f) {
             submarine.decreaseEnergy(ACTIVE_REFLECTOR_COST * delta);

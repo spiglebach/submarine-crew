@@ -22,9 +22,13 @@ public abstract class Station extends BaseActor {
 
     public abstract void operate();
 
-    protected abstract void playerNowOperating();
+    protected void playerNowOperating() {
 
-    protected abstract void playerNoLongerOperating();
+    }
+
+    protected void playerNoLongerOperating() {
+
+    }
 
 
     public boolean isOperated() {

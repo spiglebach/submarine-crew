@@ -17,15 +17,6 @@ public class ShieldStation extends Station {
     }
 
     @Override
-    protected void playerNowOperating() {
-    }
-
-    @Override
-    protected void playerNoLongerOperating() {
-
-    }
-
-    @Override
     public void buttonPressed(int buttonCode) {
         if (buttonCode == XBoxGamepad.BUTTON_X) {
             chargeSubmarineShields();

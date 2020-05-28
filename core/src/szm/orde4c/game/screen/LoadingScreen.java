@@ -16,10 +16,25 @@ public class LoadingScreen extends BaseScreen {
 
     @Override
     public void initialize() {
+        initializeBackground();
+        initializeStateCountLabel();
+        initializeLoadingBar();
+    }
+
+    private void initializeBackground() {
         BaseActor background = new BaseActor(0, 0, uiStage);
         background.loadTexture(Assets.instance.getTexture(Assets.LOADING_SCREEN));
         background.setSize(uiStage.getWidth(), uiStage.getHeight());
         background.setOpacity(0.5f);
+    }
+
+    private void initializeStateCountLabel() {
+        currentStateLabel = new Label("Töltés...", BaseGame.labelStyle);
+        currentStateLabel.setColor(Color.CYAN);
+        uiTable.add(currentStateLabel).expand().bottom();
+    }
+
+    private void initializeLoadingBar() {
         BaseActor frame = new BaseActor(0, 0, uiStage);
         frame.loadTexture(Assets.instance.getTexture(Assets.BLANK));
         frame.setSize(uiStage.getWidth(), uiStage.getHeight() * 0.1f);
@@ -39,9 +54,6 @@ public class LoadingScreen extends BaseScreen {
         loadingBar.setSize(padding, totalBarHeight);
         loadingBar.setColor(Color.NAVY);
 
-        currentStateLabel = new Label("Töltés...", BaseGame.labelStyle);
-        currentStateLabel.setColor(Color.CYAN);
-
         Table stateCountTable = new Table();
         stateCountTable.setPosition(innerFrame.getX(), innerFrame.getY());
         stateCountTable.setSize(innerFrame.getWidth(), innerFrame.getHeight());
@@ -53,7 +65,6 @@ public class LoadingScreen extends BaseScreen {
         frame.addActor(loadingBar);
         frame.addActor(stateCountTable);
 
-        uiTable.add(currentStateLabel).expand().bottom();
         uiTable.row();
         uiTable.add(frame).expandX();
     }

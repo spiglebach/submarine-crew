@@ -10,7 +10,6 @@ import java.util.List;
 public class SaveGameService {
     private static final int SAVE_SLOT_COUNT = 4;
     private static final String SAVE_PREFIX = "Save";
-    private static final String LAST_SAVE_INDEX_KEY = "LastSave";
     private static final String PREFERENCE_KEY = "LocalSaves";
 
     public static List<Save> getSaves() {
@@ -32,7 +31,6 @@ public class SaveGameService {
     private static void save(int saveId, int completedLevels) {
         Preferences savePreferences = Gdx.app.getPreferences(PREFERENCE_KEY);
         savePreferences.putInteger(SAVE_PREFIX + saveId, completedLevels);
-        savePreferences.putInteger(LAST_SAVE_INDEX_KEY, saveId);
         savePreferences.flush();
     }
 

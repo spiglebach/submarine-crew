@@ -35,36 +35,9 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
 
     @Override
     public void initialize() {
-        slots = new ArrayList<>(MAX_PLAYER_COUNT);
-        for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
-            uiTable.pad(100);
-            PlayerSelectionSlot slot = new PlayerSelectionSlot(uiStage);
-            uiTable.add(slot).expand().bottom();
-            slots.add(slot);
-        }
-
-        uiTable.row();
-        uiTable.add(new ControlDisplay(
-                new TextButtonIndicatorPair[]{
-                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_JOIN_FINALIZE,
-                                new int[]{ButtonIndicator.CONTROLLER_FACE_WEST, ButtonIndicator.KEYBOARD_E}),
-                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_SELECT_COLOR,
-                                new int[]{ButtonIndicator.CONTROLLER_JOYSTICK_X, ButtonIndicator.KEYBOARD_AD})},
-                1f, 0.1f, 0.5f, uiStage)).colspan(4).expandX().top();
-        uiTable.row();
-        uiTable.add(new ControlDisplay(new TextButtonIndicatorPair[]{
-                new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_LEAVE_CANCEL,
-                        new int[]{ButtonIndicator.CONTROLLER_FACE_EAST, ButtonIndicator.KEYBOARD_F})},
-                1f, 0.1f, 0.5f, uiStage)).colspan(4).expand().top();
-
-
-        countdownDisplay = new CountdownDisplay(3, uiStage);
-        countdownDisplay.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                startLevel();
-            }
-        });
+        initializePlayerSelectionSlots();
+        initializeControlDisplay();
+        initializeCountdownDisplay();
     }
 
     @Override
@@ -78,50 +51,40 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
         }
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.E) {
-            PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
-            if (unoccupiedSlot != null) {
-                unoccupiedSlot.playerJoined(ControlType.KEYBOARD, null);
-                return true;
-            }
+    private void initializePlayerSelectionSlots() {
+        slots = new ArrayList<>(MAX_PLAYER_COUNT);
+        for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+            uiTable.pad(100);
+            PlayerSelectionSlot slot = new PlayerSelectionSlot(uiStage);
+            uiTable.add(slot).expand().bottom();
+            slots.add(slot);
         }
-        if (keycode == Input.Keys.F) {
-            for (PlayerSelectionSlot slot : slots) {
-                if (slot.isOccupied() && ControlType.KEYBOARD.equals(slot.getPlayerInfo().getControlType())) {
-                    return false;
-                }
-            }
-            returnToLoadGameScreen();
-        }
-        return false;
     }
 
-    private void returnToLoadGameScreen() {
-        InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
-        im.removeProcessor(this);
-        for (PlayerSelectionSlot slot : slots) {
-            im.removeProcessor(slot);
-            if (slot.isOccupied() && slot.getPlayerInfo().getAssignedController() != null) {
-                slot.getPlayerInfo().getAssignedController().removeListener(slot);
-            }
-        }
-        BaseGame.setActiveScreen(new LoadGameScreen());
+    private void initializeControlDisplay() {
+        uiTable.row();
+        uiTable.add(new ControlDisplay(
+                new TextButtonIndicatorPair[]{
+                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_JOIN_FINALIZE,
+                                new int[]{ButtonIndicator.CONTROLLER_FACE_WEST, ButtonIndicator.KEYBOARD_E}),
+                        new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_SELECT_COLOR,
+                                new int[]{ButtonIndicator.CONTROLLER_JOYSTICK_X, ButtonIndicator.KEYBOARD_AD})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(4).expandX().top();
+        uiTable.row();
+        uiTable.add(new ControlDisplay(new TextButtonIndicatorPair[]{
+                new TextButtonIndicatorPair(ControlDisplay.TEXT_PRESS_TO_LEAVE_CANCEL,
+                        new int[]{ButtonIndicator.CONTROLLER_FACE_EAST, ButtonIndicator.KEYBOARD_F})},
+                1f, 0.1f, 0.5f, uiStage)).colspan(4).expand().top();
     }
 
-    @Override
-    public boolean buttonDown(Controller controller, int buttonCode) {
-        if (buttonCode == XBoxGamepad.BUTTON_X) {
-            if (!isControllerAssigned(controller)) {
-                PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
-                if (unoccupiedSlot != null) {
-                    unoccupiedSlot.playerJoined(ControlType.CONTROLLER, controller);
-                    return true;
-                }
+    private void initializeCountdownDisplay() {
+        countdownDisplay = new CountdownDisplay(3, uiStage);
+        countdownDisplay.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                startLevel();
             }
-        }
-        return false;
+        });
     }
 
     private PlayerSelectionSlot getUnoccupiedSlot() {
@@ -161,6 +124,18 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
         return true;
     }
 
+    private void returnToLoadGameScreen() {
+        InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
+        im.removeProcessor(this);
+        for (PlayerSelectionSlot slot : slots) {
+            im.removeProcessor(slot);
+            if (slot.isOccupied() && slot.getPlayerInfo().getAssignedController() != null) {
+                slot.getPlayerInfo().getAssignedController().removeListener(slot);
+            }
+        }
+        BaseGame.setActiveScreen(new LoadGameScreen());
+    }
+
     private void startLevel() {
         int occupiedSlotCount = getOccupiedSlotCount();
         PlayerInfo[] players = new PlayerInfo[occupiedSlotCount];
@@ -181,5 +156,39 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
         InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
         im.clear();
         BaseGame.setActiveScreen(new LevelScreen(currentLevelIndex, save, players));
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.E) {
+            PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
+            if (unoccupiedSlot != null) {
+                unoccupiedSlot.playerJoined(ControlType.KEYBOARD, null);
+                return true;
+            }
+        }
+        if (keycode == Input.Keys.F) {
+            for (PlayerSelectionSlot slot : slots) {
+                if (slot.isOccupied() && ControlType.KEYBOARD.equals(slot.getPlayerInfo().getControlType())) {
+                    return false;
+                }
+            }
+            returnToLoadGameScreen();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean buttonDown(Controller controller, int buttonCode) {
+        if (buttonCode == XBoxGamepad.BUTTON_X) {
+            if (!isControllerAssigned(controller)) {
+                PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
+                if (unoccupiedSlot != null) {
+                    unoccupiedSlot.playerJoined(ControlType.CONTROLLER, controller);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

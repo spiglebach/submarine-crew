@@ -24,7 +24,7 @@ import java.util.Map;
 public class LoadGameScreen extends BaseGamepadScreen {
     private final int LEVEL_COUNT = 5;
     private boolean levelSelectionMode;
-    private int highlightIndex;
+    private int currentSaveIndex;
 
     private List<SaveSlot> saveSlots;
     private List<Save> saves;
@@ -104,13 +104,13 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
     private void initializeSaveSlots() {
         Table savesTable = new Table();
-        highlightIndex = -1;
+        currentSaveIndex = -1;
         saveSlots = new ArrayList<>();
         saves = SaveGameService.getSaves();
         for (int i = 0; i < 4; i++) {
             SaveSlot slot = new SaveSlot(saveSlotWidth, saveSlotHeight, LEVEL_COUNT, saves.get(i), uiStage);
-            if (highlightIndex == -1 && !slot.isEmptySlot()) {
-                highlightIndex = i;
+            if (currentSaveIndex == -1 && !slot.isEmptySlot()) {
+                currentSaveIndex = i;
             }
             saveSlots.add(slot);
             savesTable.pad(10);
@@ -120,6 +120,30 @@ public class LoadGameScreen extends BaseGamepadScreen {
         uiTable.add(savesTable);
     }
 
+    private void initializeCursorPosition() {
+        currentLevelIndex = MINIMUM_LEVEL_INDEX;
+        nextLevelIndex = getSelectedSave().getCompletedLevels() + 1;
+
+        for (Map.Entry<Integer, LevelStamp> levelEntry : levels.entrySet()) {
+            if (levelEntry.getKey() < nextLevelIndex) {
+                levelEntry.getValue().completed();
+            } else if (levelEntry.getKey() == nextLevelIndex) {
+                levelEntry.getValue().next();
+            } else {
+                levelEntry.getValue().locked();
+            }
+        }
+
+        currentLevelIndex = MathUtils.clamp(nextLevelIndex, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
+        previousLevelIndex = currentLevelIndex;
+        LevelStamp nextLevel = levels.get(currentLevelIndex);
+
+        if (cursor != null) {
+            cursor.remove();
+        }
+        cursor = new LevelSelectorCursor(nextLevel, uiStage);
+        levelSelectorSubScreen.addActor(cursor);
+    }
 
     @Override
     public void update(float delta) {
@@ -129,7 +153,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
                 Controller controller = Controllers.getControllers().first();
                 float yAxis = controller.getAxis(XBoxGamepad.AXIS_LEFT_Y);
                 if (Math.abs(yAxis) > CONTROLLER_DEADZONE) {
-                    switchOption(yAxis);
+                    switchSave(yAxis);
                     lastSelection = 0;
                 }
             } catch (Exception e) {
@@ -138,15 +162,143 @@ public class LoadGameScreen extends BaseGamepadScreen {
         }
     }
 
+    private void switchSave(float amount) {
+        int newHighlightIndex;
+        if (amount > 0) {
+            newHighlightIndex = currentSaveIndex + 1;
+            if (newHighlightIndex >= saveSlots.size()) {
+                newHighlightIndex = 0;
+            }
+            while (saveSlots.get(newHighlightIndex).isEmptySlot()) {
+                newHighlightIndex = newHighlightIndex + 1;
+                if (newHighlightIndex >= saveSlots.size()) {
+                    newHighlightIndex = 0;
+                }
+            }
+        } else {
+            newHighlightIndex = currentSaveIndex - 1;
+            if (newHighlightIndex < 0) {
+                newHighlightIndex = saveSlots.size() - 1;
+            }
+            while (saveSlots.get(newHighlightIndex).isEmptySlot()) {
+                newHighlightIndex = newHighlightIndex - 1;
+                if (newHighlightIndex < 0) {
+                    newHighlightIndex = saveSlots.size() - 1;
+                }
+            }
+        }
+        currentSaveIndex = newHighlightIndex;
+        initializeCursorPosition();
+    }
+
+    private void switchSaveUp() {
+        unHighlight();
+        switchSave(-1);
+        highlightYellow();
+    }
+
+    private void switchSaveDown() {
+        unHighlight();
+        switchSave(1);
+        highlightYellow();
+    }
+
+    private void highlightYellow() {
+        if (!saveSlots.get(currentSaveIndex).isEmptySlot()) {
+            saveSlots.get(currentSaveIndex).setColor(Color.YELLOW);
+        }
+    }
+
+    private void highlightGreen() {
+        saveSlots.get(currentSaveIndex).setColor(Color.GREEN);
+    }
+
+    private void unHighlight() {
+        if (currentSaveIndex >= 0 && currentSaveIndex < saveSlots.size() && !saveSlots.get(currentSaveIndex).isEmptySlot()) {
+            saveSlots.get(currentSaveIndex).setColor(Color.WHITE);
+        }
+    }
+
+    private Save getSelectedSave() {
+        return saves.get(currentSaveIndex);
+    }
+
+    private void deleteSelectedSave() {
+        unHighlight();
+        saveSlots.get(currentSaveIndex).saveDeleted();
+        SaveGameService.deleteSave(getSelectedSave());
+        boolean allSavesEmpty = true;
+        for (SaveSlot slot : saveSlots) {
+            if (!slot.isEmptySlot()) {
+                allSavesEmpty = false;
+            }
+        }
+        if (allSavesEmpty) {
+            leaveToMainMenu();
+            return;
+        }
+        switchSaveDown();
+    }
+
+    private void selectNextLevel() {
+        changeLevelSelection(1);
+    }
+
+    private void selectPreviousLevel() {
+        changeLevelSelection(-1);
+    }
+
+    private void changeLevelSelection(int direction) {
+        lastSelection = 0;
+        currentLevelIndex = MathUtils.clamp(currentLevelIndex + direction, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
+        if (currentLevelIndex > nextLevelIndex) {
+            currentLevelIndex = previousLevelIndex;
+        } else {
+            LevelStamp level = levels.get(currentLevelIndex);
+            cursor.nextLevel(level);
+            previousLevelIndex = currentLevelIndex;
+        }
+    }
+
+    private void enterLevelSelectionMode() {
+        lastSelection = SELECTION_COOLDOWN;
+        levelSelectionMode = true;
+        levelSelectorSubScreen.setOpacity(1);
+        for (SaveSlot slot : saveSlots) {
+            slot.setOpacity(0.5f);
+        }
+        highlightGreen();
+    }
+
+    private void leaveLevelSelectionMode() {
+        lastSelection = SELECTION_COOLDOWN;
+        levelSelectionMode = false;
+        levelSelectorSubScreen.setOpacity(0.5f);
+        for (SaveSlot slot : saveSlots) {
+            slot.setOpacity(1);
+        }
+        highlightYellow();
+    }
+
+    private void leaveToMainMenu() {
+        InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
+        im.removeProcessor(this);
+        BaseGame.setActiveScreen(new MainMenuScreen());
+    }
+
+    private void loadSelectedSaveWithSelectedLevel() {
+        BaseGame.setActiveScreen(new PlayerSelectionScreen(currentLevelIndex, getSelectedSave()));
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         if (levelSelectionMode) {
             if (keycode == Input.Keys.D) {
-                selectNext();
+                selectNextLevel();
                 return true;
             }
             if (keycode == Input.Keys.A) {
-                selectPrevious();
+                selectPreviousLevel();
                 return true;
             }
             if (keycode == Input.Keys.E) {
@@ -158,11 +310,11 @@ public class LoadGameScreen extends BaseGamepadScreen {
             }
         } else {
             if (keycode == Input.Keys.W) {
-                switchOptionUp();
+                switchSaveUp();
                 return true;
             }
             if (keycode == Input.Keys.S) {
-                switchOptionDown();
+                switchSaveDown();
                 return true;
             }
             if (keycode == Input.Keys.E) {
@@ -178,10 +330,6 @@ public class LoadGameScreen extends BaseGamepadScreen {
             }
         }
         return false;
-    }
-
-    private void loadSelectedSaveWithSelectedLevel() {
-        BaseGame.setActiveScreen(new PlayerSelectionScreen(currentLevelIndex, getSelectedSave()));
     }
 
     @Override
@@ -210,176 +358,26 @@ public class LoadGameScreen extends BaseGamepadScreen {
         return false;
     }
 
-    private void switchOption(float amount) {
-        int newHighlightIndex;
-        if (amount > 0) {
-            newHighlightIndex = highlightIndex + 1;
-            if (newHighlightIndex >= saveSlots.size()) {
-                newHighlightIndex = 0;
-            }
-            while (saveSlots.get(newHighlightIndex).isEmptySlot()) {
-                newHighlightIndex = newHighlightIndex + 1;
-                if (newHighlightIndex >= saveSlots.size()) {
-                    newHighlightIndex = 0;
-                }
-            }
-        } else {
-            newHighlightIndex = highlightIndex - 1;
-            if (newHighlightIndex < 0) {
-                newHighlightIndex = saveSlots.size() - 1;
-            }
-            while (saveSlots.get(newHighlightIndex).isEmptySlot()) {
-                newHighlightIndex = newHighlightIndex - 1;
-                if (newHighlightIndex < 0) {
-                    newHighlightIndex = saveSlots.size() - 1;
-                }
-            }
-        }
-        highlightIndex = newHighlightIndex;
-        initializeCursorPosition();
-    }
-
-    private void switchOptionUp() {
-        unHighlight();
-        switchOption(-1);
-        highlightYellow();
-    }
-
-    private void switchOptionDown() {
-        unHighlight();
-        switchOption(1);
-        highlightYellow();
-    }
-
-    private void highlightYellow() {
-        if (!saveSlots.get(highlightIndex).isEmptySlot()) {
-            saveSlots.get(highlightIndex).setColor(Color.YELLOW);
-        }
-    }
-
-    private void highlightGreen() {
-        saveSlots.get(highlightIndex).setColor(Color.GREEN);
-    }
-
-    private void unHighlight() {
-        if (highlightIndex >= 0 && highlightIndex < saveSlots.size() && !saveSlots.get(highlightIndex).isEmptySlot()) {
-            saveSlots.get(highlightIndex).setColor(Color.WHITE);
-        }
-    }
-
-    private Save getSelectedSave() {
-        return saves.get(highlightIndex);
-    }
-
-    private void deleteSelectedSave() {
-        unHighlight();
-        saveSlots.get(highlightIndex).saveDeleted();
-        SaveGameService.deleteSave(getSelectedSave());
-        boolean allSavesEmpty = true;
-        for (SaveSlot slot : saveSlots) {
-            if (!slot.isEmptySlot()) {
-                allSavesEmpty = false;
-            }
-        }
-        if (allSavesEmpty) {
-            leaveToMainMenu();
-            return;
-        }
-        switchOptionDown();
-    }
-
-    private void selectNext() {
-        changeSelection(1);
-    }
-
-    private void selectPrevious() {
-        changeSelection(-1);
-    }
-
-    private void changeSelection(int direction) {
-        lastSelection = 0;
-        currentLevelIndex = MathUtils.clamp(currentLevelIndex + direction, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
-        if (currentLevelIndex > nextLevelIndex) {
-            currentLevelIndex = previousLevelIndex;
-        } else {
-            LevelStamp level = levels.get(currentLevelIndex);
-            cursor.nextLevel(level);
-            previousLevelIndex = currentLevelIndex;
-        }
-    }
-
-    private void initializeCursorPosition() {
-        currentLevelIndex = MINIMUM_LEVEL_INDEX;
-        nextLevelIndex = getSelectedSave().getCompletedLevels() + 1;
-
-        for (Map.Entry<Integer, LevelStamp> levelEntry : levels.entrySet()) {
-            if (levelEntry.getKey() < nextLevelIndex) {
-                levelEntry.getValue().completed();
-            } else if (levelEntry.getKey() == nextLevelIndex) {
-                levelEntry.getValue().next();
-            } else {
-                levelEntry.getValue().locked();
-            }
-        }
-
-
-        currentLevelIndex = MathUtils.clamp(nextLevelIndex, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
-        previousLevelIndex = currentLevelIndex;
-        LevelStamp nextLevel = levels.get(currentLevelIndex);
-
-        if (cursor != null) {
-            cursor.remove();
-        }
-        cursor = new LevelSelectorCursor(nextLevel, uiStage);
-        levelSelectorSubScreen.addActor(cursor);
-    }
-
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
         if (Math.abs(value) > CONTROLLER_DEADZONE) {
             if (lastSelection >= SELECTION_COOLDOWN) {
                 if (levelSelectionMode && axisCode == XBoxGamepad.AXIS_LEFT_X) {
                     if (value > 0) {
-                        selectNext();
+                        selectNextLevel();
                     } else {
-                        selectPrevious();
+                        selectPreviousLevel();
                     }
                 }
                 if (!levelSelectionMode && axisCode == XBoxGamepad.AXIS_LEFT_Y) {
                     if (-value > 0) {
-                        selectPrevious();
+                        switchSaveDown();
                     } else {
-                        selectNext();
+                        switchSaveUp();
                     }
                 }
             }
         }
         return false;
-    }
-
-    private void enterLevelSelectionMode() {
-        lastSelection = SELECTION_COOLDOWN;
-        levelSelectionMode = true;
-        levelSelectorSubScreen.setOpacity(1);
-        for (SaveSlot slot : saveSlots) {
-            slot.setOpacity(0.5f);
-        }
-        highlightGreen();
-    }
-
-    private void leaveLevelSelectionMode() {
-        lastSelection = SELECTION_COOLDOWN;
-        levelSelectionMode = false;
-        levelSelectorSubScreen.setOpacity(0.5f);
-        for (SaveSlot slot : saveSlots) {
-            slot.setOpacity(1);
-        }
-        highlightYellow();
-    }
-
-    private void leaveToMainMenu() {
-        InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
-        im.removeProcessor(this);
-        BaseGame.setActiveScreen(new MainMenuScreen());
     }
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import szm.orde4c.game.base.BaseActor;
@@ -24,20 +23,14 @@ public class Player extends BaseActor implements ControllerListener, InputProces
     private float maxVerticalSpeed;
     private float gravity;
     private float jumpSpeed;
-    private Ladder climbedLadder;
-    private BaseActor belowSensor;
-
-    private Animation animationIdle;
-    private Animation animationMoving;
-    private Animation animationClimbing;
-    private Animation animationJumping;
-    private Animation animationOperatingStation;
-
-    private Controller controller;
 
     private boolean climbing;
+    private Ladder climbedLadder;
+
+    private BaseActor belowSensor;
 
     private boolean keyboardPlayer;
+    private Controller controller;
 
     private Station station;
     private Submarine submarine;
@@ -45,7 +38,7 @@ public class Player extends BaseActor implements ControllerListener, InputProces
     public Player(float x, float y, PlayerInfo info, Submarine submarine, Stage s) {
         super(x, y, s);
         this.submarine = submarine;
-        animationMoving = loadAnimationFromSheet(Assets.instance.getTexture(Assets.PLAYER_ANIMATIONS), 1, 4, 0.1f, true);
+        loadAnimationFromSheet(Assets.instance.getTexture(Assets.PLAYER_ANIMATIONS), 1, 4, 0.1f, true);
         setSize(18, 23);
         setBoundaryRectangle();
 
@@ -59,6 +52,7 @@ public class Player extends BaseActor implements ControllerListener, InputProces
         station = null;
 
         keyboardPlayer = ControlType.KEYBOARD.equals(info.getControlType());
+        controller = info.getAssignedController();
         setColor(info.getColor());
 
         belowSensor = new BaseActor(0, 0, s);
@@ -162,7 +156,7 @@ public class Player extends BaseActor implements ControllerListener, InputProces
         }
     }
 
-    public void jump() {
+    private void jump() {
         velocityVector.y = jumpSpeed;
     }
 
@@ -180,6 +174,56 @@ public class Player extends BaseActor implements ControllerListener, InputProces
 
     public Controller getController() {
         return controller;
+    }
+
+    private void climb(int direction) {
+        if (!climbing) {
+            for (BaseActor ladderActor : BaseActor.getList(getParent(), "szm.orde4c.game.entity.submarine.Ladder")) {
+                if (overlaps(ladderActor) || belowOverlaps(ladderActor)) {
+                    if (direction > 0) {
+                        climbing = getY() < ladderActor.getY() + ladderActor.getHeight() - getHeight() / 2f;
+                    } else {
+                        climbing = getY() > ladderActor.getY() + getHeight() / 2f;
+                    }
+                    if (climbing) {
+                        stopMovementX();
+                        velocityVector.y = MathUtils.clamp(velocityVector.y, 0, maxVerticalSpeed);
+                        climbedLadder = (Ladder) ladderActor;
+                        boolean above = getY() >= ladderActor.getY() + ladderActor.getHeight() - this.getHeight();
+                        if (above) {
+                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, ladderActor.getY() + ladderActor.getHeight() - getHeight());
+                        } else {
+                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, this.getY());
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void climbUp() {
+        climb(1);
+    }
+
+    private void climbDown() {
+        climb(-1);
+    }
+
+    private void stopClimbing() {
+        climbing = false;
+        climbedLadder = null;
+    }
+
+    public boolean isKeyboardPlayer() {
+        return keyboardPlayer;
+    }
+
+    public boolean belowOverlaps(BaseActor other) {
+        Polygon belowPolygon = belowSensor.getBoundaryPolygon();
+        belowPolygon.setPosition(getX() + belowSensor.getX(), getY() + belowSensor.getY());
+
+        return Intersector.overlapConvexPolygons(belowPolygon, other.getBoundaryPolygon());
     }
 
     @Override
@@ -215,41 +259,6 @@ public class Player extends BaseActor implements ControllerListener, InputProces
             jump();
             return true;
         }
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
         return false;
     }
 
@@ -309,54 +318,39 @@ public class Player extends BaseActor implements ControllerListener, InputProces
         return false;
     }
 
-    private void climb(int direction) {
-        if (!climbing) {
-            for (BaseActor ladderActor : BaseActor.getList(getParent(), "szm.orde4c.game.entity.submarine.Ladder")) {
-                if (overlaps(ladderActor) || belowOverlaps(ladderActor)) {
-                    if (direction > 0) {
-                        climbing = getY() < ladderActor.getY() + ladderActor.getHeight() - getHeight() / 2f;
-                    } else {
-                        climbing = getY() > ladderActor.getY() + getHeight() / 2f;
-                    }
-                    if (climbing) {
-                        stopMovementX();
-                        velocityVector.y = MathUtils.clamp(velocityVector.y, 0, maxVerticalSpeed);
-                        climbedLadder = (Ladder) ladderActor;
-                        boolean above = getY() >= ladderActor.getY() + ladderActor.getHeight() - this.getHeight();
-                        if (above) {
-                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, ladderActor.getY() + ladderActor.getHeight() - getHeight());
-                        } else {
-                            setPosition(ladderActor.getX() + ladderActor.getWidth() / 2.0f - this.getWidth() / 2.0f, this.getY());
-                        }
-                        break;
-                    }
-                }
-            }
-        }
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
     }
 
-    private void climbUp() {
-        climb(1);
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
     }
 
-    private void climbDown() {
-        climb(-1);
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
     }
 
-    private void stopClimbing() {
-        climbing = false;
-        climbedLadder = null;
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
     }
 
-    public boolean isKeyboardPlayer() {
-        return keyboardPlayer;
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
     }
 
-    public boolean belowOverlaps(BaseActor other) {
-        Polygon belowPolygon = belowSensor.getBoundaryPolygon();
-        belowPolygon.setPosition(getX() + belowSensor.getX(), getY() + belowSensor.getY());
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
 
-        return Intersector.overlapConvexPolygons(belowPolygon, other.getBoundaryPolygon());
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 
     @Override

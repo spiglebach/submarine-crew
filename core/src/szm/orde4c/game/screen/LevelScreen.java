@@ -31,43 +31,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelScreen extends BaseGamepadScreen {
-    private boolean paused;
-
     private static final int MAXIMUM_ENEMY_COUNT = 4;
-    private static final float ENEMY_SPAWN_COOLDOWN = 60;
+    private static final float ENEMY_SPAWN_COOLDOWN = 30;
     private float enemySpawnCooldown = 0;
     private List<Vector2> possibleEnemySpawns;
 
     private PlayerInfo[] playerInfos;
-    private Submarine submarine;
+    private int currentLevelIndex;
+    private Save save;
 
+    private Submarine submarine;
     private float submarineStartX;
     private float submarineStartY;
 
-    private int currentLevelIndex;
-    private Save currentSave;
     private List<AttributeBar> attributeBars;
-
-    private BaseActor goal;
     private BaseActor goalIndicator;
-    private TextDisplayScreen levelCompleteScreen;
-    private TextDisplayScreen defeatScreen;
-
+    private BaseActor goal;
+    private boolean paused;
     private PauseMenu pauseMenu;
 
     public LevelScreen(int currentLevelIndex, Save save, PlayerInfo[] playerInfos) {
         super();
         this.currentLevelIndex = currentLevelIndex;
         this.playerInfos = playerInfos;
-        this.currentSave = save;
+        this.save = save;
         paused = false;
         initializeAfterConstructor();
     }
 
     @Override
     public void initialize() {
-        levelCompleteScreen = new TextDisplayScreen("Szint teljesítve!", Color.FOREST, 0.5f, uiStage);
-        defeatScreen = new TextDisplayScreen("Vereség!", Color.FIREBRICK, 1, uiStage);
     }
 
     private void initializeAfterConstructor() {
@@ -89,12 +82,11 @@ public class LevelScreen extends BaseGamepadScreen {
 
         loadLevelEnvironments(tileMapActor);
         loadLevelAreas(tileMapActor);
-        loadSubmarineStart(tileMapActor);
+        loadLevelSubmarineStart(tileMapActor);
         loadLevelGoal(tileMapActor);
         loadLevelGeyserBubblingEffects(tileMapActor);
         loadLevelGeysers(tileMapActor);
         loadLevelEnemySpawnPositions(tileMapActor);
-
     }
 
     private void initializeUI() {
@@ -170,19 +162,6 @@ public class LevelScreen extends BaseGamepadScreen {
         pauseMenu.setVisible(false);
     }
 
-    private void updateUI() {
-        for (AttributeBar attributeBar : attributeBars) {
-            attributeBar.update(submarine);
-        }
-        updateGoalIndicator();
-    }
-
-    private void updateGoalIndicator() {
-        Vector2 submarineOrigin = submarine.getPosition().cpy().add(submarine.getOriginX(), submarine.getOriginY());
-        Vector2 goalOrigin = goal.getPosition().cpy().add(goal.getOriginX(), goal.getOriginY());
-        goalIndicator.setRotation(goalOrigin.sub(submarineOrigin).angle());
-    }
-
     @Override
     public void render(float dt) {
         if (!paused) {
@@ -203,35 +182,49 @@ public class LevelScreen extends BaseGamepadScreen {
 
     @Override
     public void update(float dt) {
-
         if (paused) {
             return;
         }
 
-        processEnemies(dt);
+        spawnEnemies(dt);
         processProjectileCollision();
-
-        removeDestroyedActorsExceptSubmarine();
 
         checkLevelCompletion();
         checkLevelLoss();
 
-        submarine.boundToWorld();
-        submarine.alignCamera();
+        removeDestroyedActorsExceptSubmarine();
+
         updateUI();
     }
 
-    public void levelComplete() {
-        if (currentSave.getCompletedLevels() < currentLevelIndex) {
-            currentSave.setCompletedLevels(currentLevelIndex);
-            SaveGameService.save(currentSave);
+    private void updateUI() {
+        updateAttributeBars();
+        updateGoalIndicator();
+    }
+
+    private void updateAttributeBars() {
+        for (AttributeBar attributeBar : attributeBars) {
+            attributeBar.update(submarine);
         }
-        levelCompleteScreen.setVisible(true);
+    }
+
+    private void updateGoalIndicator() {
+        Vector2 submarineOrigin = submarine.getPosition().cpy().add(submarine.getOriginX(), submarine.getOriginY());
+        Vector2 goalOrigin = goal.getPosition().cpy().add(goal.getOriginX(), goal.getOriginY());
+        goalIndicator.setRotation(goalOrigin.sub(submarineOrigin).angle());
+    }
+
+    private void levelComplete() {
+        if (save.getCompletedLevels() < currentLevelIndex) {
+            save.setCompletedLevels(currentLevelIndex);
+            SaveGameService.save(save);
+        }
+        new TextDisplayScreen("Szint teljesítve!", Color.FOREST, 0.5f, uiStage).setVisible(true);
         levelFinished();
     }
 
     private void levelLost() {
-        defeatScreen.setVisible(true);
+        new TextDisplayScreen("Vereség!", Color.FIREBRICK, 1, uiStage).setVisible(true);
         levelFinished();
     }
 
@@ -298,7 +291,7 @@ public class LevelScreen extends BaseGamepadScreen {
         }
     }
 
-    private void processEnemies(float delta) {
+    private void spawnEnemies(float delta) {
         enemySpawnCooldown -= delta;
         if (enemySpawnCooldown <= 0 && BaseActor.count(mainStage, "szm.orde4c.game.entity.Enemy") < MAXIMUM_ENEMY_COUNT) {
             for (Vector2 position : possibleEnemySpawns) {
@@ -345,7 +338,7 @@ public class LevelScreen extends BaseGamepadScreen {
         }
     }
 
-    private void loadSubmarineStart(TileMapActor tileMapActor) {
+    private void loadLevelSubmarineStart(TileMapActor tileMapActor) {
         MapProperties submarineStartProperties = tileMapActor.getRectangleList("SubmarineStart").get(0).getProperties();
         submarineStartX = (float) submarineStartProperties.get("x");
         submarineStartY = (float) submarineStartProperties.get("y");
@@ -402,6 +395,13 @@ public class LevelScreen extends BaseGamepadScreen {
 
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
+        if (buttonCode == XBoxGamepad.BUTTON_BACK) {
+            if (paused) {
+                resumeGame();
+            } else {
+                pauseGame();
+            }
+        }
         return false;
     }
 

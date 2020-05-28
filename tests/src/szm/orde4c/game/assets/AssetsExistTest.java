@@ -1,16 +1,23 @@
 package szm.orde4c.game.assets;
 
-import static org.junit.Assert.assertTrue;
-
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import szm.orde4c.game.GdxTestRunner;
+import szm.orde4c.game.util.Assets;
 
 @RunWith(GdxTestRunner.class)
 public class AssetsExistTest {
     @Test
-    public void loadingScreenAssetsExist() {
-        assertTrue(Gdx.files.internal("loading.jpg").exists());
+    public void assetManagerAssetsExist() {
+        while(!Assets.instance.update()) {
+
+        }
+    }
+
+    @Test(expected = GdxRuntimeException.class)
+    public void assetManagerLoadNotExistingAsset() throws GdxRuntimeException {
+            Assets.instance.loadAsset("error.error", Texture.class);
     }
 }
