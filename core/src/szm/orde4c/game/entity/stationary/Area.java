@@ -22,6 +22,4 @@ public class Area extends BaseActor {
             }
         }
     }
-
-
 }

@@ -12,8 +12,8 @@ public class Rock extends RandomizedAreaObject implements Drillable {
     private static final float COLOR_GREEN_MAXIMUM= 1;
     private static final float MINIMUM_SIZE = 100;
     private static final float MAXIMUM_SIZE = 250;
-    private static final int MINIMUM_HEALTH = 20;
-    private static final int MAXIMUM_HEALTH = 40;
+    private static final int MINIMUM_HEALTH = 15;
+    private static final int MAXIMUM_HEALTH = 20;
     private static final String[] FILE_NAMES = new String[] {
             Assets.LEVEL_ROCK_0,
             Assets.LEVEL_ROCK_1,
