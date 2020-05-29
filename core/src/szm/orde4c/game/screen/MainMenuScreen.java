@@ -24,11 +24,11 @@ public class MainMenuScreen extends BaseGamepadScreen {
             MenuLabel newGame = new MenuLabel("Új játék", BaseGame.labelStyle) {
                 @Override
                 public void execute() {
-                    removeMainControllerListener();
                     int firstUnoccupiedSaveId = SaveGameService.getFirstUnoccupiedSaveId();
                     Save newSave = new Save(firstUnoccupiedSaveId, 0);
                     SaveGameService.save(newSave);
                     BaseGame.setActiveScreen(new PlayerSelectionScreen(1, newSave));
+                    removeMainControllerListener();
                 }
             };
             menuOptions.add(newGame);
@@ -80,6 +80,7 @@ public class MainMenuScreen extends BaseGamepadScreen {
         super.show();
         InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
         im.addProcessor(pauseMenu);
+        addMainControllerListener();
     }
 
     @Override
@@ -87,11 +88,20 @@ public class MainMenuScreen extends BaseGamepadScreen {
         super.hide();
         InputMultiplexer im = (InputMultiplexer) Gdx.input.getInputProcessor();
         im.removeProcessor(pauseMenu);
+        removeMainControllerListener();
     }
 
     private void removeMainControllerListener() {
         try {
             Controllers.getControllers().first().removeListener(pauseMenu);
+        } catch (Exception e) {
+            // No controller attached!
+        }
+    }
+
+    private void addMainControllerListener() {
+        try {
+            Controllers.getControllers().first().addListener(pauseMenu);
         } catch (Exception e) {
             // No controller attached!
         }

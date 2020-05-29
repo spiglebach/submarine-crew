@@ -14,8 +14,6 @@ import szm.orde4c.game.entity.submarine.Submarine;
 import szm.orde4c.game.util.AreaObjectType;
 import szm.orde4c.game.util.Assets;
 
-import java.util.ArrayDeque;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -27,6 +25,7 @@ public class EnemyTest {
 
     @Before
     public void setup() {
+        Assets.instance.loadAsset(Assets.BLANK, Texture.class);
         Assets.instance.loadAsset(Assets.LEVEL_ROCK_0, Texture.class);
         Assets.instance.loadAsset(Assets.LEVEL_ROCK_1, Texture.class);
         Assets.instance.loadAsset(Assets.LEVEL_ROCK_2, Texture.class);

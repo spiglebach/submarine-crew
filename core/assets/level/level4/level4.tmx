@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="15" height="44" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="61">
+ <layer id="1" name="Tile Layer 1" width="15" height="44">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <imagelayer id="2" name="Image Layer 1" offsetx="0" offsety="7">
+  <image source="level4.jpg" width="1979" height="5624"/>
+ </imagelayer>
+ <objectgroup id="6" name="Geyser">
+  <object id="59" x="1011.76" y="3217.22" width="309.176" height="640" rotation="-54.6028">
+   <properties>
+    <property name="name" value="Geyser"/>
+   </properties>
+  </object>
+  <object id="60" x="731.636" y="2044.97" width="309.176" height="481.298" rotation="81.3881">
+   <properties>
+    <property name="name" value="Geyser"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="3" name="Environment">
+  <object id="5" x="0" y="5504">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 136,74.6667 128,128 0,128"/>
+  </object>
+  <object id="6" x="316" y="5489.33">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -217.333,84 -188,142.667 324,142.667 321.333,52 129.333,13.3333"/>
+  </object>
+  <object id="7" x="766.667" y="5344">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -89.3333,81.3333 -200,220 -126.667,288 257.333,288 257.333,32 152,-33.3333 56,-24"/>
+  </object>
+  <object id="8" x="1273.33" y="5280">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -122.667,28 -318.667,105.333 -249.333,352 390.667,352 404,188 77.3333,16"/>
+  </object>
+  <object id="9" x="1726.67" y="5200">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -181.333,202.667 -62.6667,304 193.333,304 250.667,234.667 250.667,-80"/>
+  </object>
+  <object id="10" x="1426.67" y="5365.33">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 245.333,-12 237.333,138.667 -18.6667,138.667"/>
+  </object>
+  <object id="11" x="1.33333" y="5066.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 82.6667,-13.3333 165.333,-49.3333 432,-498.667 93.3333,-716 -1.33333,-714.667"/>
+  </object>
+  <object id="12" x="164" y="4941.33">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 102.667,70.6667 401.333,97.3333 816,-132 700,-192 92,-77.3333"/>
+  </object>
+  <object id="13" x="464" y="5070.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 32,2.66667 133.333,-50.6667 32,-108 -70.6667,-70.6667"/>
+  </object>
+  <object id="14" x="669.333" y="4961.33">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 241.333,5.33333 305.333,-22.6667 344,-64 349.333,-100 330.667,-140 13.3333,-277.333"/>
+  </object>
+  <object id="15" x="326.667" y="4518.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="12,33.3333 372,145.333 485.333,238.667 185.333,345.333"/>
+  </object>
+  <object id="16" x="512" y="4608">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -346.667,-194.667 -384,0 -128,128"/>
+  </object>
+  <object id="17" x="320" y="4512">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -232,-416 -320,-416 -320,-160"/>
+  </object>
+  <object id="18" x="258.667" y="3994.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -126.667,294.667 -258.667,101.333 -258.667,-282.667 -28,-281.333 14.6667,-60"/>
+  </object>
+  <object id="19" x="0" y="3072">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="4,180 0,640 394,702 458,676 642,462"/>
+  </object>
+  <object id="20" x="38" y="2822">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="52,360 224,542 -38,634 -38,378"/>
+  </object>
+  <object id="22" x="0" y="2560">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="74,508 160,726 0,640 0,512"/>
+  </object>
+  <object id="23" x="34" y="2760">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 58,436 -34,440 -34,-72"/>
+  </object>
+  <object id="24" x="1717.33" y="4822.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 74.6667,-18.6667 257.333,-81.3333 257.333,-552 -309.333,-342.667 -238.667,-194.667 -53.3333,-13.3333"/>
+  </object>
+  <object id="25" x="1152" y="4226.67">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 78.6667,126.667 305.333,293.333 640,125.333 384,-258.667 0,-258.667"/>
+  </object>
+  <object id="26" x="1329.33" y="3792">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -226.667,156 78.6667,432 462.667,176 182.667,-33.3333 54.6667,-20"/>
+  </object>
+  <object id="27" x="1541.33" y="3629.33">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -8,37.3333 -29.3333,196 250.667,338.667 378.667,82.6667 205.333,-40"/>
+  </object>
+  <object id="28" x="1802" y="3502">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -84,152 118,210 118,-46"/>
+  </object>
+  <object id="29" x="1716" y="3298">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 106,246 204,286 204,-226"/>
+  </object>
+  <object id="30" x="1364" y="2990">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 426,376 556,82 556,-302 -84,-302"/>
+  </object>
+  <object id="31" x="1154" y="2600">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 556,-330 766,-296 766,216 -2,216"/>
+  </object>
+  <object id="32" x="1030" y="2840">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 210,48 378,-24 250,-152"/>
+  </object>
+  <object id="33" x="1222" y="2880">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 190,144 314,-64 58,-64"/>
+  </object>
+  <object id="34" x="28" y="2780">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 92,-622 -6,-1436 -28,-1372 -28,-92"/>
+  </object>
+  <object id="35" x="192" y="1148">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -154,398 -192,4 -192,-124"/>
+  </object>
+  <object id="36" x="168" y="1160">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 444,-302 472,-546 264,-772 -40,-264"/>
+  </object>
+  <object id="37" x="340" y="10">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 92,22 152,98 224,366 198,512 -212,502"/>
+  </object>
+  <object id="38" x="1024" y="0">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 70,250 506,586 896,640 896,0"/>
+  </object>
+  <object id="39" x="1264" y="350">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -6,184 60,386 188,500 660,510 656,34"/>
+  </object>
+  <object id="40" x="1624" y="782">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 220,448 296,370 296,-14"/>
+  </object>
+  <object id="41" x="1542" y="1216">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 190,-342 378,-320 378,192"/>
+  </object>
+  <object id="42" x="758" y="1340">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="266,68 74,144 -60,230 -118,300 -86,364 116,418 534,400 526,0"/>
+  </object>
+  <object id="43" x="1214" y="1380">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 412,-206 706,28 390,586 34,402"/>
+  </object>
+  <object id="44" x="872" y="1728">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 376,134 654,164 664,-192 24,-192"/>
+  </object>
+  <object id="45" x="1572" y="1896">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -50,242 -32,284 348,408 348,-104"/>
+  </object>
+  <object id="46" x="1654" y="2210">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -132,204 138,94 138,-34"/>
+  </object>
+  <object id="48" x="393.939" y="903.03">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 287.879,136.364 406.061,157.576 490.909,136.364 521.212,93.9394 500,30.303 184.848,-236.364"/>
+  </object>
+  <object id="49" x="578.788" y="557.576">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 100,100 172.727,300 -66.7879,338.424"/>
+  </object>
+  <object id="50" x="89.0244" y="2145.45">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 153.4,148.485 -24.9815,415.152 -89.0244,158.545"/>
+  </object>
+  <object id="53" x="590.909" y="2721.21">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -15.1515,93.9394 66.6667,227.273 136.364,215.152 487.879,-106.061 127.273,-78.7879"/>
+  </object>
+  <object id="54" x="736.364" y="2887.88">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 369.697,-60.6061 543.636,-199.879 415.152,-300 31.6364,-199.879"/>
+  </object>
+  <object id="55" x="340" y="3430">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 346,-82 466,-60 568,2 568,76 498,134 116,196"/>
+  </object>
+  <object id="56" x="256" y="3584">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 156,182 230,158 434,-22 256,-128"/>
+  </object>
+  <object id="57" x="734" y="4142">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 4,56 84,124 168,136 420,-64 330,-204"/>
+  </object>
+  <object id="58" x="970" y="3944">
+   <properties>
+    <property name="name" value="Environment"/>
+   </properties>
+   <polygon points="0,0 -98,128 226,296 296,34 118,-8"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="Goal" visible="0">
+  <object id="47" x="512" y="0" width="768" height="640">
+   <properties>
+    <property name="goalOrder" value="0"/>
+    <property name="name" value="Goal"/>
+    <property name="type" value="REACH"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="SubmarineStart" visible="0">
+  <object id="3" x="6" y="5170" width="384" height="256">
+   <properties>
+    <property name="name" value="SubmarineStart"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

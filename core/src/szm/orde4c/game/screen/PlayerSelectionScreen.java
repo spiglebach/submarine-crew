@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import szm.orde4c.game.base.BaseGame;
@@ -12,7 +13,7 @@ import szm.orde4c.game.base.XBoxGamepad;
 import szm.orde4c.game.ui.ButtonIndicator;
 import szm.orde4c.game.ui.ControlDisplay;
 import szm.orde4c.game.ui.CountdownDisplay;
-import szm.orde4c.game.ui.TextButtonIndicatorPair;
+import szm.orde4c.game.util.TextButtonIndicatorPair;
 import szm.orde4c.game.util.ControlType;
 import szm.orde4c.game.util.PlayerInfo;
 import szm.orde4c.game.ui.PlayerSelectionSlot;
@@ -27,6 +28,7 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
 
     private Save save;
     private int currentLevelIndex;
+    private float delay = 0.5f;
 
     public PlayerSelectionScreen(int currentLevelIndex, Save save) {
         this.currentLevelIndex = currentLevelIndex;
@@ -42,6 +44,10 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
 
     @Override
     public void update(float dt) {
+        if (delay > 0) {
+            delay -= dt;
+            return;
+        }
         boolean allLockedIn = allOccupiedSlotsLockedIn();
         int occupiedSlotCount = getOccupiedSlotCount();
         if (occupiedSlotCount > 0 && allLockedIn) {
@@ -180,6 +186,9 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
 
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
+        if (delay > 0) {
+            return false;
+        }
         if (buttonCode == XBoxGamepad.BUTTON_X) {
             if (!isControllerAssigned(controller)) {
                 PlayerSelectionSlot unoccupiedSlot = getUnoccupiedSlot();
@@ -187,6 +196,11 @@ public class PlayerSelectionScreen extends BaseGamepadScreen {
                     unoccupiedSlot.playerJoined(ControlType.CONTROLLER, controller);
                     return true;
                 }
+            }
+        }
+        if (buttonCode == XBoxGamepad.BUTTON_B) {
+            if (!isControllerAssigned(controller) && controller.equals(Controllers.getControllers().first())) {
+                returnToLoadGameScreen();
             }
         }
         return false;

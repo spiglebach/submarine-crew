@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -15,6 +14,7 @@ import szm.orde4c.game.service.SaveGameService;
 import szm.orde4c.game.ui.*;
 import szm.orde4c.game.util.Assets;
 import szm.orde4c.game.util.Save;
+import szm.orde4c.game.util.TextButtonIndicatorPair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +40,9 @@ public class LoadGameScreen extends BaseGamepadScreen {
     private int nextLevelIndex;
 
     private final float CONTROLLER_DEADZONE = 0.4f;
-    private static final float SELECTION_COOLDOWN = 0.5f;
-    private float lastSelection = SELECTION_COOLDOWN;
+    private static final float SELECTION_COOLDOWN = 1f;
+    private float lastSelection = 0;
+    private float delay = 0.5f;
 
     @Override
     public void initialize() {
@@ -147,22 +148,15 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
     @Override
     public void update(float delta) {
-        lastSelection += delta;
-        if (lastSelection >= SELECTION_COOLDOWN) {
-            try {
-                Controller controller = Controllers.getControllers().first();
-                float yAxis = controller.getAxis(XBoxGamepad.AXIS_LEFT_Y);
-                if (Math.abs(yAxis) > CONTROLLER_DEADZONE) {
-                    switchSave(yAxis);
-                    lastSelection = 0;
-                }
-            } catch (Exception e) {
-                // No controller attached!
-            }
+        if (delay > 0) {
+            delay -= delta;
+            return;
         }
+        lastSelection -= delta;
     }
 
     private void switchSave(float amount) {
+        lastSelection = SELECTION_COOLDOWN;
         int newHighlightIndex;
         if (amount > 0) {
             newHighlightIndex = currentSaveIndex + 1;
@@ -249,7 +243,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
     }
 
     private void changeLevelSelection(int direction) {
-        lastSelection = 0;
+        lastSelection = SELECTION_COOLDOWN;
         currentLevelIndex = MathUtils.clamp(currentLevelIndex + direction, MINIMUM_LEVEL_INDEX, LEVEL_COUNT);
         if (currentLevelIndex > nextLevelIndex) {
             currentLevelIndex = previousLevelIndex;
@@ -261,7 +255,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
     }
 
     private void enterLevelSelectionMode() {
-        lastSelection = SELECTION_COOLDOWN;
+        lastSelection = 0;
         levelSelectionMode = true;
         levelSelectorSubScreen.setOpacity(1);
         for (SaveSlot slot : saveSlots) {
@@ -271,7 +265,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
     }
 
     private void leaveLevelSelectionMode() {
-        lastSelection = SELECTION_COOLDOWN;
+        lastSelection = 0;
         levelSelectionMode = false;
         levelSelectorSubScreen.setOpacity(0.5f);
         for (SaveSlot slot : saveSlots) {
@@ -334,6 +328,9 @@ public class LoadGameScreen extends BaseGamepadScreen {
 
     @Override
     public boolean buttonDown(Controller controller, int buttonCode) {
+        if (delay > 0) {
+            return false;
+        }
         if (levelSelectionMode) {
             if (buttonCode == XBoxGamepad.BUTTON_X) {
                 loadSelectedSaveWithSelectedLevel();
@@ -361,7 +358,7 @@ public class LoadGameScreen extends BaseGamepadScreen {
     @Override
     public boolean axisMoved(Controller controller, int axisCode, float value) {
         if (Math.abs(value) > CONTROLLER_DEADZONE) {
-            if (lastSelection >= SELECTION_COOLDOWN) {
+            if (lastSelection <= 0) {
                 if (levelSelectionMode && axisCode == XBoxGamepad.AXIS_LEFT_X) {
                     if (value > 0) {
                         selectNextLevel();

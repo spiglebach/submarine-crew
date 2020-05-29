@@ -11,6 +11,8 @@ import java.util.Queue;
 
 public class TorpedoStation extends Station {
     private static final float TORPEDO_LAUNCH_ENERGY_COST = 10;
+    private static final float TORPEDO_COOLDOWN = 5;
+    private float torpedoCooldown;
     private int torpedoCount;
     private float torpedoStartX;
     private float torpedoStartY;
@@ -22,10 +24,12 @@ public class TorpedoStation extends Station {
         this.torpedoStartY = torpedoStartY;
         countIndicators = indicatorQueue;
         torpedoCount = countIndicators.size();
+        torpedoCooldown = 0;
     }
 
     private void fireTorpedo() {
-        if (torpedoCount > 0 && submarine.getEnergy() > TORPEDO_LAUNCH_ENERGY_COST) {
+        if (torpedoCount > 0 && torpedoCooldown <= 0 && submarine.getEnergy() > TORPEDO_LAUNCH_ENERGY_COST) {
+            torpedoCooldown = TORPEDO_COOLDOWN;
             oneTimeEnergyConsumption(TORPEDO_LAUNCH_ENERGY_COST);
             torpedoCount--;
             float submarineX = submarine.getX();
@@ -45,6 +49,12 @@ public class TorpedoStation extends Station {
             countIndicator.setVisible(false);
             countIndicator.remove();
         }
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        torpedoCooldown -= delta;
     }
 
     @Override

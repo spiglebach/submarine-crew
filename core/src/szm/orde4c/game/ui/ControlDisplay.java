@@ -1,14 +1,13 @@
 package szm.orde4c.game.ui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.BaseGame;
 import szm.orde4c.game.util.Assets;
+import szm.orde4c.game.util.TextButtonIndicatorPair;
 
 public class ControlDisplay extends BaseActor {
     public static final String TEXT_PRESS_TO_JOIN_FINALIZE = "Csatlakozás / szín véglegesítése";
@@ -47,11 +46,7 @@ public class ControlDisplay extends BaseActor {
             controlsTable.add(textLabel).expand().right();
             controlsTable.add(buttonIndicatorGroup).expand().left();
         }
-
         addActor(controlsTable);
-
     }
-
-
 }
 
