@@ -4,6 +4,6 @@ import szm.orde4c.game.base.ParticleActor;
 
 public class ExplosionEffect extends ParticleActor {
     public ExplosionEffect() {
-        super("explosion.pfx", "");
+        super("effect/explosion.pfx", "effect");
     }
 }

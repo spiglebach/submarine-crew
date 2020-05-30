@@ -1,174 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="59" height="23" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="28">
- <layer id="1" name="Tile Layer 1" width="59" height="23">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="50" height="13" tilewidth="128" tileheight="128" infinite="0" nextlayerid="9" nextobjectid="21">
+ <imagelayer id="3" name="Image Layer 1">
+  <image source="level1.jpg" width="6400" height="1664"/>
+ </imagelayer>
+ <layer id="1" name="Tile Layer 1" width="50" height="13">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <imagelayer id="2" name="Image Layer 1" offsetx="0" offsety="-38">
-  <image source="level1.jpg" width="7604" height="2986"/>
- </imagelayer>
- <objectgroup id="3" name="Environment" visible="0" offsetx="-120" offsety="16">
-  <object id="1" x="77.1918" y="2010.3">
+ <objectgroup id="2" name="Environment">
+  <object id="1" x="0" y="1065">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 126.611,-26.456 374.164,-7.55887 699.195,111.493 731.32,927.851 5.66915,927.851"/>
+   <polygon points="0,0 113,-26 363,-6 941,189 896,599 0,599"/>
   </object>
-  <object id="2" x="517.496" y="2057.54">
+  <object id="2" x="922" y="1018">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 141.099,-57.9513 234.325,-74.3289 676.519,-120.942 827.696,355.267 774.784,638.724 -71.8092,638.724"/>
+   <polygon points="0,0 -330,34 -530,140 92,596 742,262"/>
   </object>
-  <object id="3" x="929.454" y="1970.61">
+  <object id="3" x="1160" y="918">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 288.496,-100.785 411.958,-102.045 902.025,21.4168 1279.97,185.192 1330.36,846.593 0,846.593"/>
+   <polygon points="0,0 -522,224 242,628 546,98 214,8"/>
   </object>
-  <object id="4" x="2017.93" y="2091.56">
+  <object id="4" x="1678" y="1014">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 364.715,-98.2653 510.224,-102.045 992.101,-49.1326 967.535,604.709 0,604.709"/>
+   <polygon points="0,0 110,16 768,268 754,650 -142,650"/>
   </object>
-  <object id="5" x="2569.73" y="2038.64">
+  <object id="5" x="2004" y="1218">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 2644,-486.288 2841.56,-351.716 3019.08,-142.702 3491.51,467.161 -68.0298,536.68"/>
+   <polygon points="0,0 388,-164 560,-180 1234,-110 1196,446 44,446"/>
   </object>
-  <object id="6" x="3673.32" y="1500.07">
+  <object id="6" x="3674" y="742">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 -374.164,359.046 -445.973,712.423 1489.1,107.714 1530.67,52.9121 958.087,-205.979 638.724,-236.215 366.605,-192.751"/>
+   <polygon points="0,0 -850,476 -602,922 294,794"/>
   </object>
-  <object id="7" x="2936.33" y="1993.29">
+  <object id="7" x="2698" y="1072">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 665.18,-362.826 895.726,98.2653 170.075,340.149"/>
+   <polygon points="-18,54 812,-180 758,336 -138,464"/>
   </object>
-  <object id="8" x="5525.25" y="2817.21">
+  <object id="8" x="3524" y="1014">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 243.143,-685.337 548.018,-411.958 725.651,0"/>
+   <polygon points="0,0 164,-284 376,-380 752,-474 1218,-520 1524,-490 1710,-386 1980,138"/>
   </object>
-  <object id="9" x="6009.01" y="2696.26">
+  <object id="9" x="5032" y="828">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 2.51963,-336.37 590.851,15.1177 604.709,241.884 0,241.884"/>
+   <polygon points="0,0 208,-198 1148,666 728,836 -168,836"/>
   </object>
-  <object id="10" x="6492.78" y="2817.21">
+  <object id="10" x="5562" y="998">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 59.2112,-132.28 516.523,2.51963 483.768,120.942 0,120.942"/>
+   <polygon points="0,0 838,526 838,666 70,666"/>
   </object>
-  <object id="11" x="6976.55" y="2938.15">
+  <object id="11" x="3328" y="1664">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 -1.25981,-127.241 605.969,-118.422 604.709,0"/>
+   <polygon points="0,0 384,-768 1920,-896 2304,0"/>
   </object>
-  <object id="12" x="7223.47" y="2867.6">
+  <object id="12" x="384" y="1408">
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 372.904,-132.28 469.909,-143.618 512.744,-122.201 478.729,70.5495 -5.03924,70.5495"/>
+   <polygon points="0,0 1024,-384 1664,-128 1920,256 0,256"/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Geyser">
-  <object id="17" x="716" y="1516" width="256" height="384">
-   <properties>
-    <property name="name" value="Geyser"/>
-   </properties>
-  </object>
-  <object id="18" x="1749.33" y="1136" width="417.333" height="768">
-   <properties>
-    <property name="name" value="Geyser"/>
-   </properties>
-  </object>
-  <object id="19" x="2920.48" y="1150.18" width="299.152" height="565.818">
-   <properties>
-    <property name="name" value="Geyser"/>
-   </properties>
-  </object>
-  <object id="20" x="4200" y="164" width="512" height="896">
+ <objectgroup id="4" name="Geyser">
+  <object id="13" x="1230" y="212" width="460" height="582">
    <properties>
     <property name="name" value="Geyser"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="GeyserEffect">
-  <object id="21" x="822.667" y="1713.33" width="89.3333" height="21.3333">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="22" x="1854.67" y="1439.33" width="104.667" height="28">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="23" x="1984" y="1672" width="109.333" height="26.6666">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="24" x="3024" y="1443.33" width="116" height="24">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="25" x="4300.67" y="533.33" width="191.333" height="21.3333">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="26" x="4492.67" y="863.33" width="119.333" height="25.3333">
-   <properties>
-    <property name="name" value="GeyserEffect"/>
-   </properties>
-  </object>
-  <object id="27" x="7552" y="512" width="576" height="2368">
-   <properties>
-    <property name="goalOrder" value="0"/>
-    <property name="name" value="Goal"/>
-    <property name="type" value="REACH"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup id="4" name="SubmarineStart">
-  <object id="16" x="128" y="1536" width="384" height="320">
+ <objectgroup id="5" name="SubmarineStart">
+  <object id="14" x="128" y="384" width="512" height="384">
    <properties>
     <property name="name" value="SubmarineStart"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="Area">
+  <object id="15" x="2139.99" y="895.641" width="1075.34" height="338.841" rotation="-11.8541">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="20"/>
+    <property name="objectType" value="ROCK"/>
+   </properties>
+  </object>
+  <object id="16" x="3858.61" y="417.583" width="828.847" height="212.05" rotation="-7.38609">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="20"/>
+    <property name="objectType" value="VEGETATION"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="Goal">
+  <object id="18" x="5966.67" y="175.757" width="393.939" height="966.667">
+   <properties>
+    <property name="name" value="Goal"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="GeyserEffect">
+  <object id="19" x="1344" y="520" width="68" height="26">
+   <properties>
+    <property name="name" value="GeyserEffect"/>
+   </properties>
+  </object>
+  <object id="20" x="1516" y="690" width="68" height="26">
+   <properties>
+    <property name="name" value="GeyserEffect"/>
    </properties>
   </object>
  </objectgroup>

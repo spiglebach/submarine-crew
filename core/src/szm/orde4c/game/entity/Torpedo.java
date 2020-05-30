@@ -5,11 +5,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.effect.ExplosionEffect;
+import szm.orde4c.game.util.Assets;
 
 public class Torpedo extends BaseActor {
     public Torpedo(float x, float y, float rotation, Stage s) {
         super(x, y, s);
-        loadTexture("submarine/torpedo.png"); // TODO MAKE TEXTURE AND ADD TO ASSETS
+        loadTexture(Assets.instance.getTexture(Assets.SUBMARINE_TORPEDO));
         setSize(50, 15);
         setBoundaryRectangle();
         setOrigin(0, 10);

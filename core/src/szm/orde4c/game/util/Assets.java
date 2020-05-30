@@ -240,6 +240,10 @@ public class Assets implements Disposable {
         manager.dispose();
     }
 
+    public void clear() {
+        manager.clear();
+    }
+
     public final Texture getTexture(String name) {
         return manager.get(name, Texture.class);
     }

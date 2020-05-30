@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="15" height="44" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="61">
+<map version="1.2" tiledversion="1.3.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="15" height="44" tilewidth="128" tileheight="128" infinite="0" nextlayerid="10" nextobjectid="79">
  <layer id="1" name="Tile Layer 1" width="15" height="44">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -52,14 +52,78 @@
   <image source="level4.jpg" width="1979" height="5624"/>
  </imagelayer>
  <objectgroup id="6" name="Geyser">
-  <object id="59" x="1011.76" y="3217.22" width="309.176" height="640" rotation="-54.6028">
+  <object id="59" x="1352.73" y="4968.61" width="236.449" height="279.394">
    <properties>
     <property name="name" value="Geyser"/>
    </properties>
   </object>
-  <object id="60" x="731.636" y="2044.97" width="309.176" height="481.298" rotation="81.3881">
+  <object id="60" x="896" y="2048" width="309.176" height="481.298">
    <properties>
     <property name="name" value="Geyser"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="GeyserEffect">
+  <object id="61" x="1442" y="5133" width="65" height="12">
+   <properties>
+    <property name="name" value="GeyserEffect"/>
+   </properties>
+  </object>
+  <object id="64" x="979.333" y="2342.33" width="93" height="12">
+   <properties>
+    <property name="name" value="GeyserEffect"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="Area">
+  <object id="65" x="624" y="2890" width="160" height="490">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="35"/>
+    <property name="objectType" value="ROCK"/>
+   </properties>
+  </object>
+  <object id="68" x="26" y="2696" width="574" height="180">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="30"/>
+    <property name="objectType" value="ROCK"/>
+   </properties>
+  </object>
+  <object id="69" x="52.8485" y="1542.79" width="644.848" height="180">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="15"/>
+    <property name="objectType" value="VEGETATION"/>
+   </properties>
+  </object>
+  <object id="70" x="848.85" y="887.759" width="550.417" height="180" rotation="-21.0925">
+   <properties>
+    <property name="name" value="Area"/>
+    <property name="objectCount" value="20"/>
+    <property name="objectType" value="ROCK"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="EnemySpawn">
+  <object id="75" x="988" y="1928" width="256" height="256">
+   <properties>
+    <property name="name" value="EnemySpawn"/>
+   </properties>
+  </object>
+  <object id="76" x="1244" y="3208" width="256" height="256">
+   <properties>
+    <property name="name" value="EnemySpawn"/>
+   </properties>
+  </object>
+  <object id="77" x="1628" y="4872" width="256" height="256">
+   <properties>
+    <property name="name" value="EnemySpawn"/>
+   </properties>
+  </object>
+  <object id="78" x="1116" y="1032" width="256" height="256">
+   <properties>
+    <property name="name" value="EnemySpawn"/>
    </properties>
   </object>
  </objectgroup>
@@ -374,7 +438,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="4" name="SubmarineStart" visible="0">
+ <objectgroup id="4" name="SubmarineStart">
   <object id="3" x="6" y="5170" width="384" height="256">
    <properties>
     <property name="name" value="SubmarineStart"/>
