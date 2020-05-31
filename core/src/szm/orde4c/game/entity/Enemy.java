@@ -20,7 +20,7 @@ public class Enemy extends BaseActor implements Damageable {
     private final int MAX_HEALTH = 150;
 
     private final int PROJECTILE_COUNT = 5;
-    private final float PROJECTILE_COOLDOWN = 3;
+    private final float PROJECTILE_COOLDOWN = 10;
     private int projectileCount;
     private float projectileCooldown;
 

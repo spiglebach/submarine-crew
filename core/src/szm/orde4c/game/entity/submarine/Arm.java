@@ -9,12 +9,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import szm.orde4c.game.base.BaseActor;
 import szm.orde4c.game.base.XBoxGamepad;
-import szm.orde4c.game.entity.Cuttable;
-import szm.orde4c.game.entity.Damageable;
-import szm.orde4c.game.entity.Drillable;
-import szm.orde4c.game.entity.Enemy;
+import szm.orde4c.game.entity.*;
 import szm.orde4c.game.util.Direction;
 import szm.orde4c.game.util.ArmType;
 import szm.orde4c.game.util.Assets;
@@ -47,7 +45,7 @@ public class Arm extends BaseActor {
         this.direction = direction;
         this.armType = ArmType.DRILL;
         extensionPercent = 0.5f;
-        extensionRate = 5;
+        extensionRate = 4;
         loadTexture(Assets.instance.getTexture(Assets.BLANK));
         setSize(length, girth);
         setPosition(x, y - girth / 2.0f);
@@ -76,7 +74,7 @@ public class Arm extends BaseActor {
         setRotation(rotation);
         setBoundaryRectangle();
 
-        setRotationLimit(30);
+        setRotationLimit(45);
         setRotationSpeed(60);
 
         tool = new ArmTool(this);
@@ -205,6 +203,12 @@ public class Arm extends BaseActor {
 
     @Override
     public boolean overlaps(BaseActor other) {
+        if (other instanceof Projectile) {
+            if (Intersector.overlapConvexPolygons(getTransformedTotalPolygon(), other.getBoundaryPolygon())) {
+                other.addAction(Actions.removeActor());
+                other.setColor(Color.PINK);
+            }
+        }
         if ((ArmType.DRILL.equals(armType) && station.isActivated() && (other instanceof Drillable || other instanceof Enemy)) || (ArmType.CUTTER.equals(armType) && (other instanceof Cuttable || other instanceof Enemy))) {
             if (Intersector.overlapConvexPolygons(getTransformedToolBoundaryPolygon(), other.getBoundaryPolygon())) {
                 if (other instanceof Damageable) {

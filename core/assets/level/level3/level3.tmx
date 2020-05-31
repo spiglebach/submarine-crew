@@ -203,7 +203,7 @@
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 -78,280 -100,540 -30,728 104,882 198,926 260,894 294,800 160,2"/>
+   <polygon points="0,0 -78,280 -100,540 -30,728 104,882 198,926 254.667,886 274,706.667 160,2"/>
   </object>
   <object id="27" x="2633.33" y="812.121">
    <properties>
@@ -389,7 +389,7 @@
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 40,-340 188,-676 392,-844 656,-896 996,-824 1244,-668 1360,-472 1712,548 68,536"/>
+   <polygon points="2.66667,153.333 48,-338.667 193.333,-666.667 392,-844 656,-896 996,-824 1244,-668 1360,-472 1712,548 133.333,516"/>
   </object>
   <object id="58" x="4912" y="4532">
    <properties>
@@ -449,11 +449,11 @@
    <properties>
     <property name="name" value="Environment"/>
    </properties>
-   <polygon points="0,0 -312,508 232,688 616,176"/>
+   <polygon points="38.6667,26.6667 -318.667,526.667 232,688 616,176"/>
   </object>
  </objectgroup>
  <objectgroup id="4" name="SubmarineStart">
-  <object id="68" x="128" y="4736" width="512" height="384">
+  <object id="68" x="2432" y="4480" width="512" height="384">
    <properties>
     <property name="name" value="SubmarineStart"/>
    </properties>

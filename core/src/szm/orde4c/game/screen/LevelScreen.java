@@ -32,7 +32,7 @@ import java.util.List;
 
 public class LevelScreen extends BaseGamepadScreen {
     private static final int MAXIMUM_ENEMY_COUNT = 4;
-    private static final float ENEMY_SPAWN_COOLDOWN = 30;
+    private static final float ENEMY_SPAWN_COOLDOWN = 45;
     private float enemySpawnCooldown = 0;
     private List<Vector2> possibleEnemySpawns;
 
@@ -274,8 +274,9 @@ public class LevelScreen extends BaseGamepadScreen {
 
             List<BaseActor> collisionActors = BaseActor.getList(mainStage, "szm.orde4c.game.entity.stationary.Environment");
             collisionActors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.Damageable"));
+            collisionActors.addAll(BaseActor.getList(mainStage, "szm.orde4c.game.entity.submarine.Arm"));
             for (BaseActor collisionActor : collisionActors) {
-                if (projectileActor.overlaps(collisionActor)) {
+                if (collisionActor.overlaps(projectileActor)) {
                     if (projectileActor instanceof Torpedo && !(collisionActor instanceof Submarine)) {
                         ((Torpedo) projectileActor).explode();
                         break;
