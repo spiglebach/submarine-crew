@@ -453,7 +453,7 @@
   </object>
  </objectgroup>
  <objectgroup id="4" name="SubmarineStart">
-  <object id="68" x="2432" y="4480" width="512" height="384">
+  <object id="68" x="128" y="4736" width="512" height="384">
    <properties>
     <property name="name" value="SubmarineStart"/>
    </properties>
