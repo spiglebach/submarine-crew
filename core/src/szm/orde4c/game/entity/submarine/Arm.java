@@ -185,7 +185,7 @@ public class Arm extends BaseActor {
         }
 
         Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
-        if (!Intersector.overlapConvexPolygons(boundaryPolygon, other.getBoundaryPolygon(), mtv)) {
+        if (other instanceof Enemy || !Intersector.overlapConvexPolygons(boundaryPolygon, other.getBoundaryPolygon(), mtv)) {
             return null;
         }
         if (isBeingExtended() || isBeingRotated()) {
@@ -212,7 +212,7 @@ public class Arm extends BaseActor {
         if ((ArmType.DRILL.equals(armType) && station.isActivated() && (other instanceof Drillable || other instanceof Enemy)) || (ArmType.CUTTER.equals(armType) && (other instanceof Cuttable || other instanceof Enemy))) {
             if (Intersector.overlapConvexPolygons(getTransformedToolBoundaryPolygon(), other.getBoundaryPolygon())) {
                 if (other instanceof Damageable) {
-                    ((Damageable) other).damage(20);
+                    ((Damageable) other).damage(35);
                 }
             }
         }
@@ -387,7 +387,7 @@ public class Arm extends BaseActor {
             for (float expectedRotation : rotations) {
                 for (BaseActor object : objectsInRange) {
                     Polygon otherPolygon = object.getBoundaryPolygon();
-                    Vector2 armEnd = new Vector2(length * expectedExtension + girth, 0);
+                    Vector2 armEnd = new Vector2(1.2f * length * expectedExtension + girth, 0);
                     Vector2 armBodyEnd = new Vector2(length * expectedExtension, 0);
                     armEnd.rotate(expectedRotation);
                     armBodyEnd.rotate(expectedRotation);

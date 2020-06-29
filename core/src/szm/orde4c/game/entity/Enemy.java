@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Enemy extends BaseActor implements Damageable {
     private float maximumDistanceFromSubmarineBeforeDeletion;
-    private final float DAMAGE_COOLDOWN = 0.5f;
+    private final float DAMAGE_COOLDOWN = 0.3f;
     private float damageCooldown;
     private final int MAX_HEALTH = 150;
 
