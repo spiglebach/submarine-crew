@@ -369,6 +369,7 @@ public class Arm extends BaseActor {
         parentOriginToPosition.rotate(getParent().getRotation());
 
         Vector2 armStart = parentPosition.cpy().add(parentOrigin).add(parentOriginToPosition);
+        armStart.add(0, girth / 2f);
 
         float[] extensionPercents = new float[]{
                 minExtensionPercent,

@@ -11,7 +11,7 @@ import szm.orde4c.game.base.XBoxGamepad;
 import szm.orde4c.game.util.Assets;
 
 public class ReflectorStation extends Station {
-    private static final float ACTIVE_REFLECTOR_COST = 3;
+    private static final float ACTIVE_REFLECTOR_COST = 2.5f;
     private BaseActor reflectorActor;
     private Animation inactiveLight;
     private Animation activeLight;
@@ -80,7 +80,7 @@ public class ReflectorStation extends Station {
 
     @Override
     public void continiousEnergyConsumption(float delta) {
-        if (activated && submarine.getEnergyPercent() >= 0.2f) {
+        if (activated && submarine.getEnergyPercent() >= 0.1f) {
             submarine.decreaseEnergy(ACTIVE_REFLECTOR_COST * delta);
         } else {
             activated = false;
